@@ -25,8 +25,7 @@ package net.java.dev.aircarrier.hud;
 
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 
@@ -80,7 +79,7 @@ public class HudNode extends Node {
 	 */
 	public HudNode(DisplaySystem display, String name, boolean ortho) {
 		this(display, name);
-		
+
 		if (ortho) setRenderQueueMode(Renderer.QUEUE_ORTHO);
 	}
 
@@ -90,25 +89,25 @@ public class HudNode extends Node {
 	 * 		The display system in use
 	 */
 	private void setupStates(DisplaySystem display) {
-		
+
 		//Create alpha state to blend using alpha
-		AlphaState as = display.getRenderer().createAlphaState();
+		BlendState as = display.getRenderer().createBlendState();
         as.setBlendEnabled(true);
-        as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+        as.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+        as.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
         as.setTestEnabled(false);
         as.setEnabled(true);
-       
+
         //Create disabled light state, hud nodes will be displayed
         //as unlit colour
         LightState ls = display.getRenderer().createLightState();
         ls.setEnabled(false);
-        
+
         setRenderState(as);
         setRenderState(ls);
-        
+
         //Never cull hud items
-        setCullMode(Spatial.CULL_NEVER);
+        setCullHint(CullHint.Never);
 
 	}
 

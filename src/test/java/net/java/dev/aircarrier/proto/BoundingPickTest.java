@@ -38,7 +38,7 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Box;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.ShadeState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
@@ -55,26 +55,26 @@ public class BoundingPickTest extends SimpleGame {
 	Box box;
 
 	Node boxNode;
-	
+
 	public static void main(String[] args) {
 		BoundingPickTest app = new BoundingPickTest();
-		app.setDialogBehaviour(SimpleGame.ALWAYS_SHOW_PROPS_DIALOG);
+        app.setConfigShowMode(ConfigShowMode.AlwaysShow);
 		app.start();
 	}
 
 	protected void simpleInitGame() {
-		
+
 		//Set root node flat shaded
 		ShadeState ss = display.getRenderer().createShadeState();
-		ss.setShade(ShadeState.SM_FLAT);
+		ss.setShadeMode(ShadeState.ShadeMode.Flat);
 		rootNode.setRenderState(ss);
 
-		// Create a new mouse. 
+		// Create a new mouse.
 		mouse = makeMouse();
 
 		// Move the mouse to the middle of the screen to start with
 		mouse.setLocalTranslation(new Vector3f(display.getWidth() / 2, display.getHeight() / 2, 0));
-		
+
 		// Assign the mouse to an input handler
 		mouse.registerWithInputHandler( input );
 
@@ -86,21 +86,21 @@ public class BoundingPickTest extends SimpleGame {
 		box.updateModelBound();
 
 		boxNode = new Node("The BoxNode");
-		
+
 		boxNode.attachChild(box);
 		boxNode.updateWorldData(0);
 		//FIXME find out what happened to this method
 		//boxNode.updateCollisionTree();
 		boxNode.updateWorldBound();
 		boxNode.updateGeometricState(0, true);
-		
+
 		rootNode.attachChild(boxNode);
 
 		// Deactivate the lightstate so we can see the per-vertex colors
 		lightState.setEnabled(false);
 
 		results.setCheckDistance(true);
-		
+
 	}
 
 	AbsoluteMouse makeMouse() {
@@ -112,23 +112,23 @@ public class BoundingPickTest extends SimpleGame {
 		URL cursorLoc;
 		cursorLoc = BoundingPickTest.class.getClassLoader().getResource(
 				"jmetest/data/cursor/cursor1.png");
-		Texture t = TextureManager.loadTexture(cursorLoc, Texture.MM_LINEAR,
-				Texture.FM_LINEAR);
-		ts.setTexture(t);
+		Texture t = TextureManager.loadTexture(cursorLoc, Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear);
+
+     	ts.setTexture(t);
 		am.setRenderState(ts);
 
 		// Make the mouse's background blend with what's already there
-		AlphaState as = display.getRenderer().createAlphaState();
+		BlendState as = display.getRenderer().createBlendState();
 		as.setBlendEnabled(true);
-		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+		as.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+		as.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
 		as.setTestEnabled(true);
-		as.setTestFunction(AlphaState.TF_GREATER);
-		am.setRenderState(as);		
-		
+		as.setTestFunction(BlendState.TestFunction.GreaterThan);
+		am.setRenderState(as);
+
 		return am;
 	}
-	
+
 	PickResults results = new BoundingPickResults() {
 
 		public void processPick() {
@@ -138,12 +138,12 @@ public class BoundingPickTest extends SimpleGame {
 				for (int j = 0; j < getNumber(); j++) {
 					PickData pData = getPickData(j);
 					System.err.println(pData.getDistance());
-					System.err.println(pData.getTargetMesh().getParentGeom().getParent());
+					System.err.println(pData.getTargetMesh().getParent());
 				}
 			}
 		}
 	};
-	
+
 
 	// This is called every frame. Do changing of values here.
 	protected void simpleUpdate() {
@@ -166,6 +166,6 @@ public class BoundingPickTest extends SimpleGame {
 			boxNode.calculatePick(mouseRay, results);
 
 		}
-		
+
 	}
 }

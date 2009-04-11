@@ -27,16 +27,16 @@ import java.nio.FloatBuffer;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.TriMesh;
-import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.TexCoords;
 import com.jme.util.geom.BufferUtils;
 
 /**
- * <code>Grid</code> defines a four sided, two dimensional  rectangular shape. 
+ * <code>Grid</code> defines a four sided, two dimensional  rectangular shape.
  * The local height of the <code>Quad</code> defines it's size about the y-axis, while
  * the width defines the x-axis. The z-axis will always be 0.
  * The plane is subdivided into one or more sections along each axis, to form a grid
  * of smaller quads.
- * 
+ *
  * @author shingoki
  * @version $Id: Grid.java,v 1.1 2007/03/18 22:44:19 shingoki Exp $
  */
@@ -44,13 +44,13 @@ public class Grid extends TriMesh {
 
 	int xQuads;
 	int yQuads;
-	
+
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor creates a new <code>Quade</code> object with the provided
 	 * width and height.
-	 * 
+	 *
 	 * @param name
 	 * 		The name of the <code>Quad</code>.
 	 * @param width
@@ -70,13 +70,13 @@ public class Grid extends TriMesh {
 		if ( (xQuads < 1) || (yQuads < 1) ) throw new IllegalArgumentException("xQuads and yQuads must be greater than 0.");
 		initialize(width, height, xQuads, yQuads, centered);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * <code>initialize</code> builds the data for the <code>Grid</code>
 	 * object.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param width
 	 *            the width of the <code>Quad</code>.
 	 * @param height
@@ -88,45 +88,43 @@ public class Grid extends TriMesh {
 	 * @param centered
 	 * 		If true, grid is centered on 0,0,0, otherwise the
 	 * 		grid is from 0, 0, 0 to width, height, 0
-	 *            
+	 *
 	 */
 	public void initialize(float width, float height, int xQuads, int yQuads, boolean centered) {
-		
+
 		this.xQuads = xQuads;
 		this.yQuads = yQuads;
-		
-        TriangleBatch batch = getBatch(0);
-        
-        //We have one more vertex than the number of quads, along each axis 
-		batch.setVertexCount((xQuads + 1) * (yQuads + 1));
-		
+
+        //We have one more vertex than the number of quads, along each axis
+		setVertexCount((xQuads + 1) * (yQuads + 1));
+
 		//We need enough vertices in the buffer
-		batch.setVertexBuffer(BufferUtils.createVector3Buffer(batch.getVertexCount()));
-		
+		setVertexBuffer(BufferUtils.createVector3Buffer(getVertexCount()));
+
 		//One normal per vertex
-		batch.setNormalBuffer(BufferUtils.createVector3Buffer(batch.getVertexCount()));
-	
+		setNormalBuffer(BufferUtils.createVector3Buffer(getVertexCount()));
+
 		//One UV position per vertex
-        FloatBuffer tbuf = BufferUtils.createVector2Buffer(batch.getVertexCount());
-        setTextureBuffer(0,tbuf);
-        
+        FloatBuffer tbuf = BufferUtils.createVector2Buffer(getVertexCount());
+        setTextureCoords(new TexCoords(tbuf, 2), 0);
+
         //Two triangles per quad
-	    batch.setTriangleQuantity(2 * xQuads * yQuads);
-	    
+	    setTriangleQuantity(2 * xQuads * yQuads);
+
 	    //3 indices per triangle
-	    batch.setIndexBuffer(BufferUtils.createIntBuffer(batch.getTriangleCount() * 3));
+	    setIndexBuffer(BufferUtils.createIntBuffer(getTriangleCount() * 3));
 
 	    //Set vertex positions, in reading order
 	    float offset = centered ? -0.5f : 0;
 		for (int x = 0; x < xQuads + 1; x++) {
 			for (int y = 0; y < yQuads + 1; y++) {
-				batch.getVertexBuffer().put(width * (offset + ((float)x) / ((float)xQuads))).put(height * (offset + ((float)y) / ((float)yQuads))).put(0);
+				getVertexBuffer().put(width * (offset + ((float)x) / ((float)xQuads))).put(height * (offset + ((float)y) / ((float)yQuads))).put(0);
 			}
 		}
 
 		//All normals face along z axis
-		for (int i = 0; i < batch.getVertexCount(); i++) {
-			batch.getNormalBuffer().put(0).put(0).put(1);
+		for (int i = 0; i < getVertexCount(); i++) {
+		    getNormalBuffer().put(0).put(0).put(1);
 		}
 
 		//Textures are set evenly from 0 to 1 on each axis, vertices are in reading order,
@@ -150,15 +148,15 @@ public class Grid extends TriMesh {
 		    	int topLeft = x + y * (xQuads + 1);
 
 		    	//first triangle
-			    batch.getIndexBuffer().put(topLeft);					//top left
-			    batch.getIndexBuffer().put(topLeft + (xQuads + 1));		//down a line of verts
-			    batch.getIndexBuffer().put(topLeft + (xQuads + 1) + 1);	//down a line, and one to the right
+			    getIndexBuffer().put(topLeft);					//top left
+			    getIndexBuffer().put(topLeft + (xQuads + 1));		//down a line of verts
+			    getIndexBuffer().put(topLeft + (xQuads + 1) + 1);	//down a line, and one to the right
 
 		    	//second triangle
-			    batch.getIndexBuffer().put(topLeft);					//top left
-			    batch.getIndexBuffer().put(topLeft + (xQuads + 1) + 1);	//down a line, and one to the right
-			    batch.getIndexBuffer().put(topLeft + 1);				//one to the right
-		    }	    	
+			    getIndexBuffer().put(topLeft);					//top left
+			    getIndexBuffer().put(topLeft + (xQuads + 1) + 1);	//down a line, and one to the right
+			    getIndexBuffer().put(topLeft + 1);				//one to the right
+		    }
 	    }
 	}
 
@@ -174,11 +172,10 @@ public class Grid extends TriMesh {
 	 * 		The new y coordinate of the point
 	 */
 	public void movePoint(int xIndex, int yIndex, float x, float y) {
-        TriangleBatch batch = getBatch(0);
-		batch.getVertexBuffer().position((xIndex + yIndex * (xQuads + 1)) * 3);
-		batch.getVertexBuffer().put(x).put(y).put(0);
+	    getVertexBuffer().position((xIndex + yIndex * (xQuads + 1)) * 3);
+		getVertexBuffer().put(x).put(y).put(0);
 	}
-	
+
 	/**
 	 * Move the texture coord of a point within the grid
 	 * @param xIndex
@@ -191,9 +188,9 @@ public class Grid extends TriMesh {
 	 * 		The new texture y coordinate of the point
 	 */
 	public void moveUV(int xIndex, int yIndex, float x, float y) {
-        TriangleBatch batch = getBatch(0);
-		batch.getTextureBuffer(0).position((xIndex + yIndex * (xQuads + 1)) * 2);
-		batch.getTextureBuffer(0).put(x).put(y);
+        final FloatBuffer buf = getTextureCoords(0).coords;
+        buf.position((xIndex + yIndex * (xQuads + 1)) * 2);
+		buf.put(x).put(y);
 	}
 
 }

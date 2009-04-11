@@ -44,10 +44,10 @@ public class BombModel {
 	private static Texture defaultTexture;
 	private static TextureState defaultTextureState;
 	private static CullState cullState;
-	
+
 	/**
 	 * Create a node with compass dial, using default texture state
-	 * @throws IOException 
+	 * @throws IOException
 	 * 		If model cannot be loaded
 	 */
 	public static Node createBombModel() throws IOException {
@@ -56,26 +56,26 @@ public class BombModel {
 		}
 		return createBombModel(defaultTextureState);
 	}
-	
+
 	/**
 	 * Create a node with compass dial, using specified texture state
 	 * @param textureState
-	 * 		Texture for the number dial 
-	 * @throws IOException 
+	 * 		Texture for the number dial
+	 * @throws IOException
 	 * 		If model cannot be loaded
 	 */
 	public static Node createBombModel(TextureState textureState) throws IOException {
-				
-		//Load the model 
+
+		//Load the model
 		JmeBinaryReader jbr = new JmeBinaryReader();
 		Node model = jbr.loadBinaryFormat(CompassDial.class.getClassLoader()
 				.getResourceAsStream("resources/bomb.jme"));
 		model.updateGeometricState(0, true);
-		        
+
 		model.getChild(0).getLocalRotation().fromAngles(0, 0, FastMath.PI/2f);
-				
+
 		System.out.println("Bomb: " + model.getChild(0));
-		
+
         //Set the model's render states correctly
 		model.setRenderState(textureState);
 		model.setRenderState(cullState);
@@ -85,23 +85,23 @@ public class BombModel {
 	}
 
 	static void initialize() {
-		
+
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
 
 		//Texture has a default strip of numbers
 		defaultTexture = TextureManager.loadTexture(CompassDial.class
 				.getClassLoader().getResource("resources/bomb.png"),
-				Texture.MM_NONE, Texture.FM_LINEAR);
+                Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear);
 
 		//Default texture state
 		defaultTextureState = display.getRenderer().createTextureState();
 		defaultTextureState.setTexture(defaultTexture);
-		
+
 		//CullState
 		cullState = display.getRenderer().createCullState();
-		cullState.setCullMode(CullState.CS_BACK);
+		cullState.setCullFace(CullState.Face.Back);
 	}
-	
-	
-		
+
+
+
 }

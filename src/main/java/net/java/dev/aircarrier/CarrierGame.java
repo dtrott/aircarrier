@@ -70,12 +70,12 @@ import com.jmex.physics.PhysicsSpace;
 public abstract class CarrierGame extends BaseGame {
 
     private static final Logger logger = Logger.getLogger(CarrierGame.class.getName());
-	
+
 	/**
 	 * Physics space
 	 */
     private PhysicsSpaceExtended physicsSpace;
-    
+
     /** The camera that we see through. */
     protected Camera cam;
 
@@ -89,13 +89,13 @@ public abstract class CarrierGame extends BaseGame {
 	Node litWorldNode;
 
 	Node reflectedNode;
-	
+
 	Node hudNode;
 
 	Node orthoHudNode;
 
 	CameraNode camNode;
-	
+
     /** Handles our mouse/keyboard input. */
     //protected InputHandler input;
 
@@ -119,7 +119,7 @@ public abstract class CarrierGame extends BaseGame {
 
     /** Number of samples to use for the multisample buffer. */
     protected int samples = 0;
-    
+
     /**
      * Simply an easy way to get at timer.getTimePerFrame(). Also saves time so
      * you don't call it more than once per frame.
@@ -153,25 +153,24 @@ public abstract class CarrierGame extends BaseGame {
     protected boolean pause;
 
     float farView = 3000f;//2000;
-    
+
     InputHandler input;
-    
+
 	float startTime = 0;
-	
+
 	protected BasicPassManager passManager;
 
     AudioSystem audio;
     ArrayList<RangedAudioTracker> trackers = new ArrayList<RangedAudioTracker>();
 
-	
+
     /**
      * Updates the timer, sets tpf, updates the input and updates the fps
      * string. Also checks keys for toggling pause, bounds, normals, lights,
      * wire etc.
-     * 
+     *
      * @param interpolation
      *            unused in this implementation
-     * @see AbstractGame#update(float interpolation)
      */
     protected void update(float interpolation) {
         /** Recalculate the framerate. */
@@ -184,41 +183,43 @@ public abstract class CarrierGame extends BaseGame {
 
 		startTime += tpf;
 		if (startTime < 3) return;
-        
+
         /** Check for key/mouse updates. */
         input.update(tpf);
 
-      
+
         updateBuffer.setLength(0);
         updateBuffer.append("FPS: ").append((int) timer.getFrameRate()).append(
                 " - ");
-        updateBuffer.append(display.getRenderer().getStatistics(tempBuffer));
+
+        // DJT TODO
+        //updateBuffer.append(display.getRenderer().getStatistics(tempBuffer));
         // Send the fps to our fps bar at the bottom.
         fps.print(updateBuffer);
 
 
         //Handle key input for wireframe, pause, etc.
         handleKeys();
-        
+
         if ( !pause ) {
             /** Call simpleUpdate in any derived classes of SimpleGame. */
             simpleUpdate();
-            
+
             /** Update controllers/render states/transforms/bounds for rootNode. */
             rootNode.updateGeometricState(tpf, true);
 
             /** Update controllers/render states/transforms/bounds for hudNode. */
             hudNode.updateGeometricState(tpf, true);
-            
+
             /** Update controllers/render states/transforms/bounds for orthoHudNode. */
             orthoHudNode.updateGeometricState(tpf, true);
-            
+
             // update our audio system here:
             if (audio != null) audio.update();
 
         }
 
-        
+
         if ( !pause ) {
             float tpf = this.tpf;
             if ( tpf > 1 || Float.isNaN( tpf ) ) {
@@ -229,7 +230,7 @@ public abstract class CarrierGame extends BaseGame {
         }
 
 		passManager.updatePasses(tpf);
-        
+
     }
 
     protected void handleKeys() {
@@ -290,23 +291,24 @@ public abstract class CarrierGame extends BaseGame {
         if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit",
                 false)) {
             finish();
-        }    	
+        }
     }
-    
+
     /**
      * Clears stats, the buffers and renders bounds and normals if on.
-     * 
+     *
      * @param interpolation
      *            unused in this implementation
-     * @see AbstractGame#render(float interpolation)
      */
     protected void render(float interpolation) {
         Renderer r = display.getRenderer();
         /** Reset display's tracking information for number of triangles/vertexes */
-        r.clearStatistics();
+
+        // TODO DJT
+        //r.clearStatistics();
         /** Clears the previously rendered information. */
         r.clearBuffers();
-        
+
 
         /** Have the PassManager render. */
         passManager.renderPasses(display.getRenderer());
@@ -320,8 +322,8 @@ public abstract class CarrierGame extends BaseGame {
             Debugger.drawBuffer(Texture.RTT_SOURCE_DEPTH, Debugger.NORTHEAST, r);
         }
         */
-        
-        
+
+
         doDebug(display.getRenderer());
     }
 
@@ -341,8 +343,7 @@ public abstract class CarrierGame extends BaseGame {
     /**
      * Creates display, sets up camera, and binds keys. Called in
      * BaseGame.start() directly after the dialog box.
-     * 
-     * @see AbstractGame#initSystem()
+     *
      */
     protected void initSystem() {
         try {
@@ -350,17 +351,17 @@ public abstract class CarrierGame extends BaseGame {
              * Get a DisplaySystem acording to the renderer selected in the
              * startup box.
              */
-            display = DisplaySystem.getDisplaySystem(properties.getRenderer());
-            
+            display = DisplaySystem.getDisplaySystem(settings.getRenderer());
+
             display.setMinDepthBits(depthBits);
             display.setMinStencilBits(stencilBits);
             display.setMinAlphaBits(alphaBits);
             display.setMinSamples(samples);
-            
+
             /** Create a window with the startup box's information. */
-            display.createWindow(properties.getWidth(), properties.getHeight(),
-                    properties.getDepth(), properties.getFreq(), properties
-                            .getFullscreen());
+            display.createWindow(settings.getWidth(), settings.getHeight(),
+                    settings.getDepth(), settings.getFrequency(), settings
+                    .isFullscreen());
             /**
              * Create a camera specific to the DisplaySystem that works with the
              * display's width and height
@@ -378,7 +379,7 @@ public abstract class CarrierGame extends BaseGame {
         }
 
         input = new InputHandler();
-        
+
         /** Set a black background. */
         display.getRenderer().setBackgroundColor(ColorRGBA.black);
 
@@ -398,15 +399,16 @@ public abstract class CarrierGame extends BaseGame {
         /** Get a high resolution timer for FPS updates. */
         timer = Timer.getTimer();
         //timer = NanoTimer.getTimer();
-        
+
         /** Sets the title of our display. */
         display.setTitle("Air Carrier");
-        
+
         /**
          * Signal to the renderer that it should keep track of rendering
          * information.
          */
-        display.getRenderer().enableStatistics(true);
+        // DJT TODO
+        //display.getRenderer().enableStatistics(true);
 
         /** Assign key P to action "toggle_pause". */
         KeyBindingManager.getKeyBindingManager().set("toggle_pause",
@@ -453,13 +455,11 @@ public abstract class CarrierGame extends BaseGame {
     /**
      * Creates rootNode, lighting, statistic text, and other basic render
      * states. Called in BaseGame.start() after initSystem().
-     * 
-     * @see AbstractGame#initGame()
      */
     protected void initGame() {
-    	
+
         setPhysicsSpace( new PhysicsSpaceWrapper(PhysicsSpace.create()) );
-        
+
         /** Create rootNode */
         rootNode = new Node("rootNode");
 
@@ -477,34 +477,34 @@ public abstract class CarrierGame extends BaseGame {
          */
         ZBufferState buf = display.getRenderer().createZBufferState();
         buf.setEnabled(true);
-        buf.setFunction(ZBufferState.CF_LEQUAL);
+        buf.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
         rootNode.setRenderState(buf);
 
         // Then our font Text object.
         /** This is what will actually have the text at the bottom. */
         fps = Text.createDefaultTextLabel("FPS label");
-        fps.setCullMode(Spatial.CULL_NEVER);
-        fps.setTextureCombineMode(TextureState.REPLACE);
+        fps.setCullHint(Spatial.CullHint.Never);
+        fps.setTextureCombineMode(Spatial.TextureCombineMode.Replace);
 
         // Finally, a stand alone node (not attached to root on purpose)
         fpsNode = new Node("FPS node");
-        fpsNode.setRenderState(fps.getRenderState(RenderState.RS_ALPHA));
+        fpsNode.setRenderState(fps.getRenderState(RenderState.RS_BLEND));
         fpsNode.setRenderState(fps.getRenderState(RenderState.RS_TEXTURE));
         fpsNode.attachChild(fps);
-        fpsNode.setCullMode(Spatial.CULL_NEVER);
+        fps.setCullHint(Spatial.CullHint.Never);
 
 
 		worldNode = new Node("worldNode");
 		//skyNode = new Node("skyNode");
 
 		reflectedNode = new Node("reflectedNode");
-				
-		
+
+
 		//reflectedNode.attachChild(skyNode);
 		rootNode.attachChild(reflectedNode);
-		
+
 		rootNode.attachChild(worldNode);
-		
+
 		litWorldNode = new Node("litWorldNode");
 		worldNode.attachChild(litWorldNode);
 
@@ -515,7 +515,7 @@ public abstract class CarrierGame extends BaseGame {
 		light.setAmbient(new ColorRGBA(1f, 1f, 1f, 1.0f));
 		light.setDirection(new Vector3f(0, -0.422f, -1));
 		light.setEnabled(true);
-		
+
 		//SHADOW
         //light.setShadowCaster(true);
 
@@ -523,52 +523,53 @@ public abstract class CarrierGame extends BaseGame {
         lightState = display.getRenderer().createLightState();
         lightState.setEnabled(true);
         lightState.attach(light);
-        
+
         light = new DirectionalLight();
 		light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 		light.setAmbient(new ColorRGBA(0.7f, 0.7f, 1f, 1.0f));
 		light.setDirection(new Vector3f(0, -0.422f, 1));
 		light.setEnabled(true);
 		lightState.attach(light);
-        
+
         litWorldNode.setRenderState(lightState);
-		
+
         //Set up pass manager, get it to draw root and fps nodes
         passManager = new BasicPassManager();
-        
+
 		RenderPass rootPass = new RenderPass();
 		rootPass.add( rootNode );
 		passManager.add( rootPass );
 
 		RenderPass fpsPass = new RenderPass();
 		fpsPass.add( fpsNode );
-		passManager.add( fpsPass );
+        //DJT TODO
+		//passManager.add( fpsPass );
 
 		//Pass hudPass = new RenderPass();
 		hudNode = new HudNode(display, "Plane HUD");
 		hudNode.setLocalTranslation(-display.getRenderer().getWidth()/2, -display.getRenderer().getHeight()/2, 0);
-		
+
 		Pass hudPass = new AlternateCameraRenderPass();
 		hudPass.add( hudNode );
 		passManager.add( hudPass );
 
-		
+
 		orthoHudNode = new HudNode(display, "Plane ORTHO HUD", true);
 		//hudNode.setLocalTranslation(-display.getRenderer().getWidth()/2, -display.getRenderer().getHeight()/2, 0);
-		
+
 		Pass orthoHudPass = new RenderPass();
 		orthoHudPass.add( orthoHudNode );
 		passManager.add( orthoHudPass );
 
-		
+
 		camNode = new CameraNode("Camera Node", cam);
 		worldNode.attachChild(camNode);
 		camNode.updateWorldData(0);
-		
+
 		audio = null;
-		
+
         // grab a handle to our audio system.
-		
+
 		/*
 		try {
 			audio = AudioSystem.getSystemWithException();
@@ -579,22 +580,22 @@ public abstract class CarrierGame extends BaseGame {
 			e.printStackTrace();
 		}
         */
-		
+
 		audio = AudioSystem.getSystem();
         // setup our ear tracker to track the camera's position and orientation.
         audio.getEar().trackOrientation(cam);
         audio.getEar().trackPosition(cam);
-		
-		
+
+
         /** Let derived classes initialize. */
         simpleInitGame();
 
         //Cull back faces on whole world
         CullState cs = display.getRenderer().createCullState();
-        cs.setCullMode(CullState.CS_BACK);
+        cs.setCullFace(CullState.Face.Back);
         cs.setEnabled(true);
         rootNode.setRenderState(cs);
-        
+
         /**
          * Update geometric and rendering information for both the rootNode and
          * fpsNode.
@@ -603,7 +604,7 @@ public abstract class CarrierGame extends BaseGame {
         rootNode.updateRenderState();
         fpsNode.updateGeometricState(0.0f, true);
         fpsNode.updateRenderState();
-        
+
         //Get all textures loaded
 		TextureManager.preloadCache(DisplaySystem.getDisplaySystem().getRenderer());
 
@@ -630,14 +631,12 @@ public abstract class CarrierGame extends BaseGame {
 
     /**
      * unused
-     * @see AbstractGame#reinit()
      */
     protected void reinit() {
     }
 
     /**
      * Cleans up the keyboard.
-     * @see AbstractGame#cleanup()
      */
     protected void cleanup() {
 //    	LOGGINGFIX
@@ -646,10 +645,10 @@ public abstract class CarrierGame extends BaseGame {
         KeyInput.destroyIfInitalized();
         MouseInput.destroyIfInitalized();
         JoystickInput.destroyIfInitalized();
-        
+
         physicsSpace.delete();
     }
-    
+
     /**
      * @return the physics space for this simple game
      */
@@ -667,7 +666,7 @@ public abstract class CarrierGame extends BaseGame {
 			this.physicsSpace = physicsSpace;
 		}
 	}
-    
+
     /**
      * Calls the quit of BaseGame to clean up the display and then closes the JVM.
      */

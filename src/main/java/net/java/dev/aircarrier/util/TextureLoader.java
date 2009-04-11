@@ -26,6 +26,7 @@ package net.java.dev.aircarrier.util;
 import net.java.dev.aircarrier.scene.CarrierSkyBox;
 
 import com.jme.image.Texture;
+import com.jme.image.Image;
 import com.jme.util.TextureManager;
 
 public class TextureLoader {
@@ -44,18 +45,16 @@ public class TextureLoader {
 		return TextureManager.loadTexture(
 				TextureLoader.class.getClassLoader().getResource(
 				resourceName),
-				Texture.MM_LINEAR_LINEAR,
-				Texture.FM_LINEAR);
+                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
 	}
 
 	public static Texture loadUncompressedTexture(String resourceName) {
 		return TextureManager.loadTexture(
-				CarrierSkyBox.class.getClassLoader().getResource(resourceName), 
-				Texture.MM_LINEAR_LINEAR,
-				Texture.FM_LINEAR, 
+				CarrierSkyBox.class.getClassLoader().getResource(resourceName),
+                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear,
 				//Make sure we don't use compression, which makes skyboxes look awful
-				com.jme.image.Image.GUESS_FORMAT_NO_S3TC,		 
-				1f, 
+                Image.Format.GuessNoCompression,
+				1f,
 				true);
 	}
 }

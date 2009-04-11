@@ -24,29 +24,27 @@
 package net.java.dev.aircarrier.scene;
 
 import com.jme.image.Texture;
+import com.jme.image.Image;
 import com.jme.scene.Skybox;
-import com.jme.scene.Spatial;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.FogState;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 
 /**
- * 
+ *
  * A skybox with textures loaded from carrier resources
- * 
+ *
  * @author shingoki
- * 
+ *
  */
 public class CarrierSkyBox extends Skybox {
 	private static final long serialVersionUID = -5939987896538415224L;
 
 	/**
 	 * Create a skybox
-	 * 
+	 *
 	 * @param name
 	 *            Name for the node
 	 * @param resourceBase
@@ -65,17 +63,17 @@ public class CarrierSkyBox extends Skybox {
 		Texture w = loadSkyTexture(resourceBase + "W" + resourceExtension);
 		Texture d = loadSkyTexture(resourceBase + "D" + resourceExtension);
 
-		setTexture(Skybox.UP, u);
-		setTexture(Skybox.NORTH, n);
-		setTexture(Skybox.EAST, e);
-		setTexture(Skybox.SOUTH, s);
-		setTexture(Skybox.WEST, w);
-		setTexture(Skybox.DOWN, d);
-		
+		setTexture(Skybox.Face.Up, u);
+		setTexture(Skybox.Face.North, n);
+		setTexture(Skybox.Face.East, e);
+		setTexture(Skybox.Face.South, s);
+		setTexture(Skybox.Face.West, w);
+		setTexture(Skybox.Face.Down, d);
+
 		preloadTextures();
-		
+
 		CullState cullState = DisplaySystem.getDisplaySystem().getRenderer().createCullState();
-		cullState.setCullMode( CullState.CS_NONE );
+        cullState.setCullFace(CullState.Face.None);
 		cullState.setEnabled( true );
 		setRenderState( cullState );
 
@@ -87,26 +85,26 @@ public class CarrierSkyBox extends Skybox {
 		fs.setEnabled( false );
 		setRenderState( fs );
 
-		setLightCombineMode( LightState.OFF );
-		setCullMode( Spatial.CULL_NEVER );
-		
-		setTextureCombineMode( TextureState.REPLACE );
+		setLightCombineMode(LightCombineMode.Off);
+		setCullHint(CullHint.Never);
+
+		setTextureCombineMode(TextureCombineMode.Replace);
 		updateRenderState();
 
 		//lockBounds();
 		//lockMeshes();
-		
-		
+
+
 	}
 
 	static Texture loadSkyTexture(String resourceName) {
 		return TextureManager.loadTexture(
-				CarrierSkyBox.class.getClassLoader().getResource(resourceName), 
-				Texture.MM_LINEAR_LINEAR,
-				Texture.FM_LINEAR, 
-				//Make sure we don't use compression, which makes skyboxes look awful
-				com.jme.image.Image.GUESS_FORMAT_NO_S3TC,		 
-				1f, 
+				CarrierSkyBox.class.getClassLoader().getResource(resourceName),
+                Texture.MinificationFilter.Trilinear,
+                Texture.MagnificationFilter.Bilinear,
+                //Make sure we don't use compression, which makes skyboxes look awful
+                Image.Format.GuessNoCompression,
+				1f,
 				true);
 	}
 }

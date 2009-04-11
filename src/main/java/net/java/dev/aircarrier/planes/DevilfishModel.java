@@ -27,8 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jmetest.renderer.TestEnvMap;
-
 import net.java.dev.aircarrier.GunbirdMesh;
 import net.java.dev.aircarrier.model.XMLparser.JmeBinaryReader;
 import net.java.dev.aircarrier.scene.ApproximatelySphericalNode;
@@ -46,12 +44,12 @@ import com.jme.util.TextureManager;
 public class DevilfishModel implements PlaneModel{
 
 	private Node model;
-	
+
 	List<Node> propPositions = new ArrayList<Node>();
 	List<Node> gunPositions = new ArrayList<Node>();
-	
+
 	List<Node> bulletBounds = new ArrayList<Node>();
-	
+
 	public DevilfishModel() throws IOException {
 		JmeBinaryReader jbr = new JmeBinaryReader();
 		jbr.setProperty("bound", "obb");
@@ -59,23 +57,23 @@ public class DevilfishModel implements PlaneModel{
 				.getResourceAsStream("resources/devilfish2.jme"));
 
 		model.updateGeometricState(0, true);
-		
+
 		Texture bodyTexture = TextureManager.loadTexture(GunbirdMesh.class
 				.getClassLoader().getResource("resources/DevilfishBody.bmp"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-		bodyTexture.setMipmapState(Texture.MM_NONE);
+                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+        bodyTexture.setMinificationFilter(Texture.MinificationFilter.BilinearNoMipMaps);
 
 		Texture wingTexture = TextureManager.loadTexture(GunbirdMesh.class
 				.getClassLoader().getResource("resources/DevilfishWing.bmp"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-		wingTexture.setMipmapState(Texture.MM_NONE);
+                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+        wingTexture.setMinificationFilter(Texture.MinificationFilter.BilinearNoMipMaps);
 
-		Texture envTexture = TextureManager.loadTexture(TestEnvMap.class
+		Texture envTexture = TextureManager.loadTexture(DevilfishModel.class
 				.getClassLoader()
 				.getResource("resources/sky_env.jpg"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-		envTexture.setEnvironmentalMapMode(Texture.EM_SPHERE);
-		envTexture.setApply(Texture.AM_ADD);
+            Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+		envTexture.setEnvironmentalMapMode(Texture.EnvironmentalMapMode.SphereMap);
+		envTexture.setApply(Texture.ApplyMode.Add);
 
 		for (Object o : model.getChildren()) {
 			System.out.println(o);
@@ -98,9 +96,9 @@ public class DevilfishModel implements PlaneModel{
 
 				// Add shiny environment to shield, cowling and engines
 				if (n.getName().indexOf("env") >= 0) {
-				      ts.setTexture( envTexture, 1 );					
+				      ts.setTexture( envTexture, 1 );
 				}
-				
+
 				ts.setEnabled(true);
 
 				// Set the texture to the quad
@@ -108,7 +106,7 @@ public class DevilfishModel implements PlaneModel{
 
 			}
 		}
-		
+
 		gunPositions = SimplePlaneModel.extractNodes(model, "gun");
 		propPositions = SimplePlaneModel.extractNodes(model, "prop");
 

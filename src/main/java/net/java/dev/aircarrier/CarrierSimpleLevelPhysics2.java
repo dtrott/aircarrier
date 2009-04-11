@@ -68,18 +68,18 @@ package net.java.dev.aircarrier;
 
 /**
  * <code>TestTerrainPage</code>
- * 
+ *
  * @author Mark Powell
  * @version $Id: CarrierSimpleLevelPhysics2.java,v 1.2 2006/07/21 23:59:32 shingoki Exp $
  */
 public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //
 //	private float terrainHeightScale = 2f;// 1.5f;
-//	
+//
 //	private float terrainHorizontalScale = 7f;
 //
 //	Skybox skybox;
-//	
+//
 //	NodeTracker tracker;
 //
 //	JoystickInput joystickInput;
@@ -90,10 +90,10 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //
 //	JoystickPlaneInput mouseJoystickPlaneInput;
 //	JoystickPlaneInput keyJoystickPlaneInput;
-//	
+//
 //	VirtualJoystick mouseJoy;
 //	VirtualJoystick keyJoy;
-//	
+//
 //	PlaneController controller;
 //
 //	HudNode hudNode;
@@ -101,42 +101,42 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //	Plane plane;
 //
 //	BulletFactory bulletFactory;
-//	
+//
 //	MouseJoystickInputHandler mouseInput;
 //	KeyJoystickInputHandler keyInput;
-//	
+//
 //	private PhysicsSpace physicsSpace;
 //
 //	DynamicPhysicsNode dynamicBox;
-//	
+//
 //	PlaneAssembly assembly;
-//	
+//
 //	float clearTime = 10f;
 //	float minClearTime = 0.4f;
-//	
+//
 //	Vector3f tempV = new Vector3f();
-//	
+//
 //	Vector3f zeroVector = new Vector3f(0,0,0);
-//	
+//
 //	static {
 //		JoystickInput.setProvider(JoystickInput.INPUT_LWJGL);
 //	}
 //
 //	/**
 //	 * Entry point for the test,
-//	 * 
+//	 *
 //	 * @param args
 //	 */
 //	public static void main(String[] args) {
-//		
+//
 //		LoggingSystem.getLoggingSystem().setLevel(Level.OFF);
-//		
+//
 //		CarrierSimpleLevelPhysics2 app = new CarrierSimpleLevelPhysics2();
 //		app.setDialogBehaviour(ALWAYS_SHOW_PROPS_DIALOG);
 //		app.start();
 //	}
 //
-//	
+//
 //	@Override
 //	protected void simpleUpdate() {
 //		super.simpleUpdate();
@@ -145,17 +145,17 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //		mouseInput.update(tpf);
 //		mouseJoy.update(tpf);
 //		mouseJoystickPlaneInput.update(tpf);
-//		
+//
 //		keyInput.update(tpf);
 //		keyJoy.update(tpf);
 //		keyJoystickPlaneInput.update(tpf);
 //
 //		//Real joystick to plane controller
 //		joystickPlaneInput.update(tpf);
-//		
+//
 //		//plane controller to plane
 //		controller.update(tpf);
-//		
+//
 //		//plane itself
 //		plane.update(tpf);
 //
@@ -167,23 +167,23 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //
 //		//UpdatePhysics
 //		updatePhysics(tpf);
-//		
+//
 //		// Because we are changing the scene (moving the skybox and player) we
 //		// need to update
 //		// the graph.
 //		rootNode.updateGeometricState(tpf, true);
 //
 //	}
-//	
+//
 //	void updatePhysics(float tpf) {
-//		
+//
 //		//Update physics
 //		physicsSpace.update(tpf);
-//		
+//
 //		//Increase time that we have been clear of contact with plane
 //		//(This is decreased to zero on contacts)
 //		clearTime += tpf;
-//		
+//
 //		if (clearTime < minClearTime) {
 //			assembly.getBase().getLocalTranslation().set(dynamicBox.getLocalTranslation());
 //
@@ -191,7 +191,7 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //			//Work out the rotation required to get base facing in same direction as velocity of the
 //			//dynamic box, and apply it
 //			tempV = assembly.getBase().getWorldRotation().getRotationColumn(2);
-//			
+//
 //	        // get angle between vectors
 //	        float angle = tempV.angleBetween(dynamicBox.getLinearVelocity());
 //
@@ -203,19 +203,19 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //	        q.fromAngleAxis(angle, rotAxis);
 //	        q.mult(assembly.getBase().getLocalRotation(), assembly.getBase().getLocalRotation());
 //	        */
-//			
+//
 //		}
-//		
+//
 //	}
-//	
+//
 //	void buildWorld() {
 //		physicsSpace = PhysicsSpace.create();
 //		physicsSpace.setDirectionalGravity(new Vector3f());
-//		
+//
 //		//Create material for ideal bounce collisions
 //		Material idealBounce = new Material("idealBounce");
 //		idealBounce.setDensity(5f);
-//		
+//
 //		//Create a contact info for ideal bounce, and
 //		//add it for any other material touching this one
 //		//(hence "null" in put method)
@@ -227,54 +227,54 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //		info.setMu(0f);
 //		info.setMuOrthogonal(0f);
 //		idealBounce.putContactHandlingDetails(null, info);
-//		
+//
 //		//Set ideal bounce material as default
 //		physicsSpace.setDefaultMaterial(idealBounce);
-//				
+//
 //		physicsSpace.addToUpdateCallbacks(new PhysicsUpdateCallback() {
-//		
+//
 //			@Override
 //			public void beforeStep(PhysicsSpace space, float time) {
 //				dynamicBox.setAngularVelocity(zeroVector);
-//				
+//
 //				//box.getLocalRotation().set(plane.getWorldRotation());
 //				//dynamicBox.syncWithGraphical();
-//				
+//
 //				plane.updateWorldVectors();
 //				plane.updateGeometricState(0, true);
 //		        dynamicBox.getLocalRotation().set(plane.getWorldRotation());
-//		        
+//
 //		        dynamicBox.updateGeometricState(0, true);
-//		        
+//
 //				if (clearTime > minClearTime) {
-//					
+//
 //					//Work out the velocity required to make the
 //					//physics box reach the position of the plane box,
 //					//if it is update immediately
-//					tempV = 
+//					tempV =
 //						plane.getWorldTranslation().subtract(
 //								dynamicBox.getWorldTranslation(), tempV).multLocal(100f);
-//					
+//
 //					//Update plane bounding box from plane controller
 //					dynamicBox.setLinearVelocity(tempV);
 //					//box.getLocalTranslation().set(plane.getWorldTranslation());
 //					//System.out.println(dynamicBox.getLinearVelocity());
 //				}
 //			}
-//		
+//
 //			@Override
 //			public void afterStep(PhysicsSpace space, float time) {
 //			}
-//		
+//
 //		});
 //	}
-//	
+//
 //	protected void simpleInitGame() {
 //
 //		buildWorld();
-//		
+//
 //		//initSpheres();
-//		
+//
 //		joystickInput = JoystickInput.get();
 //
 //		for (int i = 0; i < joystickInput.getJoystickCount(); i++) {
@@ -296,7 +296,7 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //		display.getRenderer().setBackgroundColor(skyColor);
 //
 //		CullState cs = display.getRenderer().createCullState();
-//		cs.setCullMode(CullState.CS_BACK);
+//		cs.setCullFace(CullState.Face.Back);
 //		cs.setEnabled(true);
 //		rootNode.setRenderState(cs);
 //
@@ -317,7 +317,7 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //				terrainHorizontalScale,
 //				terrainHeightScale);
 //
-//		
+//
 //		worldNode.attachChild(terrain);
 //
 //		terrain.addPhysicsToNode(physicsSpace, rootNode);
@@ -337,9 +337,9 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //        // resize it to be 10x10 thin (0.5) floor
 //        floorBox.getLocalScale().set( 100, 100f, 100 );
 //        floorBox.getLocalTranslation().set(250, 250, 250);
-//        
 //
-//		
+//
+//
 //		FogState fs = display.getRenderer().createFogState();
 //		fs.setDensity(0.5f);
 //		fs.setEnabled(true);
@@ -356,12 +356,12 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //		try {
 //
 //			BulletFactory bulletFactory = new BulletFactory();
-//			
+//
 //			DevilfishModel planeModel = new DevilfishModel();
 //			//HammerheadModel planeModel = new HammerheadModel();
-//			
+//
 //			plane = new Plane("Plane", planeModel.getModel(), worldNode, bulletFactory);
-//			
+//
 //			assembly = new PlaneAssembly("DevilFish", plane);
 //
 //			litWorldNode.attachChild(assembly.getBase());
@@ -378,21 +378,21 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //	        dynamicBox.getLocalScale().set(14f, 2f, 5f);
 //	        // Move to be centered on the plane
 //	        dynamicBox.getLocalTranslation().set(0, 250, 0);
-//				        
+//
 //	        SyntheticButton collisionEventHandler = dynamicBox.getCollisionEventHandler();
 //	        input.addAction( new InputAction() {
 //	            public void performAction( InputActionEvent evt ) {
 //	                ContactInfo info = (ContactInfo) evt.getTriggerData();
 //	    			clearTime = 0;
 //
-//	                
+//
 //	                //if ( info.getGeometry1() != floorGeom && info.getGeometry2() != floorGeom ) {
 //	                //    System.out.println( evt.getTriggerData() );
 //	                //}
-//	            	
+//
 //	            }
 //	        }, collisionEventHandler.getDeviceName(), collisionEventHandler.getIndex(), InputHandler.AXIS_NONE, false );
-//	        
+//
 //			controller = new PlaneController(assembly);
 //
 //			joystickPlaneInput = new JoystickPlaneInput(controller, joystick);
@@ -405,13 +405,13 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //			mouseJoystickPlaneInput.setPrimaryFireButton(0);
 //			mouseJoystickPlaneInput.setSecondaryFireButton(1);
 //
-//			keyJoy = new VirtualJoystick();						
+//			keyJoy = new VirtualJoystick();
 //			keyInput = new KeyJoystickInputHandler(keyJoy);
 //			keyJoystickPlaneInput = new JoystickPlaneInput(controller, keyJoy);
 //			keyJoystickPlaneInput.setPrimaryFireButton(0);
 //			keyJoystickPlaneInput.setSecondaryFireButton(1);
 //
-//			
+//
 //			Node camNode = new CameraNode("Camera Node", cam);
 //			camNode.setLocalTranslation(new Vector3f(assembly.getCameraTarget()
 //					.getWorldTranslation()));
@@ -439,9 +439,9 @@ public class CarrierSimpleLevelPhysics2 {//extends CarrierGame {
 //		terrain.updateRenderState();
 //		terrain.updateWorldData(0);
 //	}
-//	
+//
 //	protected void simpleRender() {
 //        PhysicsDebugger.drawPhysics( physicsSpace, display.getRenderer() );
 //	}
-//	
+//
 }

@@ -28,7 +28,6 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import jmetest.terrain.TestTerrain;
 import net.java.dev.aircarrier.jme.terrain.ImageHeightMap;
 import net.java.dev.aircarrier.util.TextureLoader;
 
@@ -48,68 +47,67 @@ public class CarrierTerrainPage extends TerrainPage {
 	private static final long serialVersionUID = -3827476033253550051L;
 
 	public static CarrierTerrainPage create(
-			String name, 
-			String heightImageResource, 
+			String name,
+			String heightImageResource,
 			String lightImageResource,
 			String detailImageResource,
-			int size, 
+			int size,
 			float terrainHorizontalScale,
 			float terrainHeightScale,
 			boolean clod) {
-		
+
 		URL heightURL = CarrierTerrainPage.class.getClassLoader().getResource(
 				heightImageResource);
-		
-		Image heightImage = 
+
+		Image heightImage =
 			new ImageIcon(heightURL
 					).getImage();
-		
+
 		ImageHeightMap heightMap = new ImageHeightMap(heightImage, size);
-		
+
 		Vector3f terrainScale = new Vector3f(terrainHorizontalScale, terrainHeightScale, terrainHorizontalScale);
-		
+
 		heightMap.setHeightScale(1f);
-		
-		CarrierTerrainPage page = new CarrierTerrainPage(name, 17, heightMap.getSize(),
-				terrainScale, heightMap.getHeightMap(), clod);
+
+		CarrierTerrainPage page = new CarrierTerrainPage(name, 17, heightMap.getSize(), terrainScale, heightMap.getHeightMap(), clod);
 
 		page.setDetailTexture(1, 64);
-		
+
 		TextureState ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 		ts.setEnabled(true);
 		Texture t1 = TextureLoader.loadTexture(lightImageResource);
 		ts.setTexture(t1, 0);
 
-		Texture t2 = TextureManager.loadTexture(TestTerrain.class
+		Texture t2 = TextureManager.loadTexture(CarrierTerrainPage.class
 				.getClassLoader()
 				.getResource(detailImageResource),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
 		ts.setTexture(t2, 1);
-		t2.setWrap(Texture.WM_WRAP_S_WRAP_T);
+		t2.setWrap(Texture.WrapMode.Repeat);
 
-		t1.setApply(Texture.AM_COMBINE);
-		t1.setCombineFuncRGB(Texture.ACF_MODULATE);
-		t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-		t1.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
-		t1.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
-		t1.setCombineOp1RGB(Texture.ACO_SRC_COLOR);
-		t1.setCombineScaleRGB(1.0f);
+		t1.setApply(Texture.ApplyMode.Combine);
+		t1.setCombineFuncRGB(Texture.CombinerFunctionRGB.Modulate);
+		t1.setCombineSrc0RGB(Texture.CombinerSource.CurrentTexture);
+		t1.setCombineOp0RGB(Texture.CombinerOperandRGB.SourceColor);
+		t1.setCombineSrc1RGB(Texture.CombinerSource.PrimaryColor);
+		t1.setCombineOp1RGB(Texture.CombinerOperandRGB.SourceColor);
+        t1.setCombineScaleRGB(Texture.CombinerScale.One);
 
-		t2.setApply(Texture.AM_COMBINE);
-		t2.setCombineFuncRGB(Texture.ACF_ADD_SIGNED);
-		t2.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-		t2.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
-		t2.setCombineSrc1RGB(Texture.ACS_PREVIOUS);
-		t2.setCombineOp1RGB(Texture.ACO_SRC_COLOR);
-		t2.setCombineScaleRGB(1.0f);
+		t2.setApply(Texture.ApplyMode.Combine);
+		t2.setCombineFuncRGB(Texture.CombinerFunctionRGB.AddSigned);
+		t2.setCombineSrc0RGB(Texture.CombinerSource.CurrentTexture);
+		t2.setCombineOp0RGB(Texture.CombinerOperandRGB.SourceColor);
+		t2.setCombineSrc1RGB(Texture.CombinerSource.Previous);
+		t2.setCombineOp1RGB(Texture.CombinerOperandRGB.SourceColor);
+		t2.setCombineScaleRGB(Texture.CombinerScale.One);
 		page.setRenderState(ts);
-		
+
 		return page;
 	}
 
 	private CarrierTerrainPage(String name, int blockSize, int size,
-			Vector3f stepScale, int[] heightMap, boolean clod) {
-		super(name, blockSize, size, stepScale, heightMap, clod);
+            Vector3f stepScale, float[] heightMap, boolean clod) {
+		super(name, blockSize, size, stepScale, heightMap);
 		System.out.println("Made terrain with clod? " + clod);
 	}
 

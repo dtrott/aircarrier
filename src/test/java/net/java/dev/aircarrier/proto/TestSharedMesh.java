@@ -44,7 +44,7 @@ import com.jme.util.TextureManager;
 
 /**
  * <code>TestSharedMesh</code>
- * 
+ *
  * @author Mark Powell
  * @version $Id: TestSharedMesh.java,v 1.4 2007/08/12 10:04:10 shingoki Exp $
  */
@@ -59,7 +59,7 @@ public class TestSharedMesh extends SimpleGame {
 	private TriMesh s;
 
 	int frame = 0;
-	
+
 	TextureState ts;
 	TextureState ts2;
 	TextureState ts3;
@@ -69,17 +69,17 @@ public class TestSharedMesh extends SimpleGame {
 	Node n2;
 	Node n3;
 	Node n4;
-	
+
 	/**
 	 * Entry point for the test,
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		Logger.getLogger("").setLevel(Level.WARNING);
-		
+
 		TestSharedMesh app = new TestSharedMesh();
-		app.setDialogBehaviour(ALWAYS_SHOW_PROPS_DIALOG);
+        app.setConfigShowMode(ConfigShowMode.AlwaysShow);
 		app.start();
 	}
 
@@ -92,9 +92,9 @@ public class TestSharedMesh extends SimpleGame {
 		}
 		rotQuat.fromAngleAxis(angle, axis);
 		s.setLocalRotation(rotQuat);
-		
+
 		frame ++;
-		
+
 		if (frame ==100) {
 			for (int i = 0; i < 100; i++) {
 				SharedMesh sm = new SharedMesh("Share" + i, s);
@@ -103,13 +103,13 @@ public class TestSharedMesh extends SimpleGame {
 						(float) Math.random() * 500 - 250,
 						(float) Math.random() * 500 - 250));
 				sm.setRenderState(ts2);
-				sm.setLightCombineMode(LightState.OFF);
+				sm.setLightCombineMode(SharedMesh.LightCombineMode.Off);
 				n2.attachChild(sm);
 			}
 			n2.updateGeometricState(0, true);
 			n2.updateRenderState();
 		}
-		
+
 		if (frame == 200) {
 			for (int i = 0; i < 100; i++) {
 				SharedMesh sm = new SharedMesh("Share" + i, s);
@@ -118,14 +118,14 @@ public class TestSharedMesh extends SimpleGame {
 						(float) Math.random() * 500 - 250,
 						(float) Math.random() * 500 - 250));
 				sm.setRenderState(ts3);
-				
+
 				n3.attachChild(sm);
 			}
 			n3.updateGeometricState(0, true);
 			n3.updateRenderState();
-			
+
 		}
-		
+
 		if (frame == 300) {
 			for (int i = 0; i < 100; i++) {
 				SharedMesh sm = new SharedMesh("Share" + i, s);
@@ -135,16 +135,16 @@ public class TestSharedMesh extends SimpleGame {
 						(float) Math.random() * 1000 - 500));
 				sm.setRenderState(ts4);
 				n4.attachChild(sm);
-			}			
+			}
 			n4.updateGeometricState(0, true);
 			n4.updateRenderState();
-			
+
 		}
 	}
 
 	/**
 	 * builds the trimesh.
-	 * 
+	 *
 	 * @see com.jme.app.SimpleGame#initGame()
 	 */
 	protected void simpleInitGame() {
@@ -154,41 +154,41 @@ public class TestSharedMesh extends SimpleGame {
 		s.setModelBound(new BoundingBox());
 		s.updateModelBound();
 		s.setVBOInfo(new VBOInfo(true));
-        
+
         CullState cs = display.getRenderer().createCullState();
-        cs.setCullMode(CullState.CS_BACK);
+        cs.setCullFace(CullState.Face.Back);
         cs.setEnabled(true);
         rootNode.setRenderState(cs);
-        
+
 		ts = display.getRenderer().createTextureState();
 		ts.setEnabled(true);
 		ts.setTexture(TextureManager.loadTexture(
 				TestSharedMesh.class.getClassLoader().getResource(
 						"jmetest/data/images/Monkey.jpg"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
-		
+            Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear));
+
 		ts2 = display.getRenderer().createTextureState();
 		ts2.setEnabled(true);
 		ts2.setTexture(TextureManager.loadTexture(
 				TestSharedMesh.class.getClassLoader().getResource(
 						"jmetest/data/texture/grass.jpg"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
-		
+            Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear));
+
 		ts3 = display.getRenderer().createTextureState();
 		ts3.setEnabled(true);
 		ts3.setTexture(TextureManager.loadTexture(
 				TestSharedMesh.class.getClassLoader().getResource(
 						"jmetest/data/texture/clouds.png"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
-		
+        Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear));
+
 		ts4 = display.getRenderer().createTextureState();
 		ts4.setEnabled(true);
 		ts4.setTexture(TextureManager.loadTexture(
 				TestSharedMesh.class.getClassLoader().getResource(
 						"jmetest/data/texture/water.png"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
-		
-		
+            Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear));
+
+
 
 		n1 = new Node("n1");
 		n2 = new Node("n2");
@@ -203,12 +203,12 @@ public class TestSharedMesh extends SimpleGame {
 //		n2.setRenderState(ts2);
 //		n3.setRenderState(ts3);
 //		n4.setRenderState(ts4);
-		
+
 		rootNode.attachChild(n1);
 		rootNode.attachChild(n2);
 		rootNode.attachChild(n3);
 		rootNode.attachChild(n4);
-		
+
 		for (int i = 0; i < 100; i++) {
 			SharedMesh sm = new SharedMesh("Share" + i, s);
 			sm.setLocalTranslation(new Vector3f(

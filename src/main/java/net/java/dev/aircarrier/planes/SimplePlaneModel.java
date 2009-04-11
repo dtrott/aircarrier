@@ -10,8 +10,6 @@ import net.java.dev.aircarrier.util.SpatialMeshLocker;
 import net.java.dev.aircarrier.util.SpatialVBOInfoSetter;
 import net.java.dev.aircarrier.util.SpatialWalker;
 
-import jmetest.renderer.TestEnvMap;
-
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
@@ -37,19 +35,19 @@ public class SimplePlaneModel implements PlaneModel {
 	List<Node> rearFlaps;
 
 	List<Node> bulletBounds;
-	
+
 	Spatial physicsBounds;
-	
+
 	private Node model;
-	
+
 	ApproximatelySphericalNode avoidanceNode;
-	
+
 	Vector3f cameraOffset;
-	
+
 	public SimplePlaneModel(
-			String modelResource, 
-			String textureResource, 
-			String wreckageTextureResource, 
+			String modelResource,
+			String textureResource,
+			String wreckageTextureResource,
 			float scale,
 			boolean mipmap) throws IOException {
 		JmeBinaryReader jbr = new JmeBinaryReader();
@@ -58,42 +56,42 @@ public class SimplePlaneModel implements PlaneModel {
 				.getResourceAsStream(modelResource));
 
 		model.setLocalScale(scale);
-				
+
 		model.updateGeometricState(0, true);
-		
+
 		Texture bodyTexture = TextureManager.loadTexture(ChimeraModel.class
 				.getClassLoader().getResource(textureResource),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-		if (!mipmap) {
-			bodyTexture.setMipmapState(Texture.MM_NONE);
+                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+        if (!mipmap) {
+			bodyTexture.setMinificationFilter(Texture.MinificationFilter.BilinearNoMipMaps);
 		}
 
 		Texture wreckageTexture = TextureManager.loadTexture(ChimeraModel.class
 				.getClassLoader().getResource(wreckageTextureResource),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
 
 		if (bodyTexture == null) {
 			System.err.println("Null plane texture " + textureResource);
 		}
-		
-		Texture envTexture = TextureManager.loadTexture(TestEnvMap.class
+
+		Texture envTexture = TextureManager.loadTexture(SimplePlaneModel.class
 				.getClassLoader()
 				.getResource("resources/sky_env.jpg"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-		envTexture.setEnvironmentalMapMode(Texture.EM_SPHERE);
-		envTexture.setApply(Texture.AM_ADD);
+            Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+		envTexture.setEnvironmentalMapMode(Texture.EnvironmentalMapMode.SphereMap);
+		envTexture.setApply(Texture.ApplyMode.Add);
 
 		CullState cullState = DisplaySystem.getDisplaySystem().getRenderer().createCullState();
-		cullState.setCullMode(CullState.CS_NONE);
-		
+		cullState.setCullFace(CullState.Face.None);
+
 		//System.out.println("===========================");
 		//SpatialWalker.printSpatialTree(model);
 		//System.out.println("===========================");
-		
+
 		for (Object o : model.getChildren()) {
 			//System.out.println(o);
 			if (o instanceof Node) {
-				
+
 				Node n = (Node) o;
 
 				TextureState ts = (TextureState) n
@@ -105,16 +103,16 @@ public class SimplePlaneModel implements PlaneModel {
 
 				// Initialize the texture state
 				if (n.getName().startsWith("wreckage")) {
-					ts.setTexture(wreckageTexture, 0);					
+					ts.setTexture(wreckageTexture, 0);
 				} else {
 					ts.setTexture(bodyTexture, 0);
 				}
 
 				// Add shiny environment to shield, cowling and engines
 				if (n.getName().startsWith("env")) {
-				      ts.setTexture( envTexture, 1 );					
+				      ts.setTexture( envTexture, 1 );
 				}
-				
+
 				ts.setEnabled(true);
 
 				// Set the texture to the quad
@@ -126,7 +124,7 @@ public class SimplePlaneModel implements PlaneModel {
 				}
 			}
 		}
-				
+
 		gunPositions = extractNodes(model, "gun");
 		//System.out.println("gun positions " + gunPositions.size());
 		propPositions = extractNodes(model, "prop");
@@ -158,7 +156,7 @@ public class SimplePlaneModel implements PlaneModel {
 			wreckageStartPositions.add(pos);
 		}
 		//System.out.println("wreckage start positions" + wreckageStartPositions.size());
-		
+
 		//Get the physics bounds
 		Spatial s = model.getChild("physicsBounds");
 		if (s != null) {
@@ -168,7 +166,7 @@ public class SimplePlaneModel implements PlaneModel {
 		} else {
 			physicsBounds = new Box("Plane physics bounds box", new Vector3f(), 3, 1, 2);
 		}
-		
+
         BoundingSphere shootableBounds = new BoundingSphere();
 
         //Make shootable bounds
@@ -181,14 +179,14 @@ public class SimplePlaneModel implements PlaneModel {
         //Make sphere for testing (makes avoidance sphere visible)
         /*Sphere sphere = new Sphere("overallbounds", 9, 9, shootableBounds.getRadius());
         model.attachChild(sphere);
-        sphere.getLocalTranslation().set(shootableBounds.getCenter());*/        
-        
+        sphere.getLocalTranslation().set(shootableBounds.getCenter());*/
+
         //Make spherical node for plane to mark out approx area
         ApproximatelySphericalNode sphericalNode = new ApproximatelySphericalNode("Avoidance area", shootableBounds.getRadius());
         model.attachChild(sphericalNode);
         sphericalNode.getLocalTranslation().set(shootableBounds.getCenter());
         avoidanceNode = sphericalNode;
-				
+
 		//Detach wreckage
 		for (Node n : wreckage) {
 			model.detachChild(n);
@@ -202,7 +200,7 @@ public class SimplePlaneModel implements PlaneModel {
 
 		//FIXME remove this to use damage positions
 		//damagePositions.clear();
-		
+
 		/*
 		Node bomb = BombModel.createBombModel();
 		model.attachChild(bomb);
@@ -210,7 +208,7 @@ public class SimplePlaneModel implements PlaneModel {
 		bomb.getLocalTranslation().setZ(0.6f);
 		bomb.setLocalScale(0.75f);
 		*/
-		
+
 		//SpatialWalker.actOnSpatialTree(model, new SpatialBoundsClearer());
 
 		//Strip bounds?
@@ -221,12 +219,12 @@ public class SimplePlaneModel implements PlaneModel {
 
 		model.setModelBound(new BoundingSphere());
 		model.updateModelBound();
-		
-		
+
+
 	}
-	
+
 	/**
-	 * Extract the positions of a sequence of children of the 
+	 * Extract the positions of a sequence of children of the
 	 * given model node, where the sequence must be named with the
 	 * specified base, and a consecutive sequence of integers beginning
 	 * with 0. As soon as a numbered child is missing, the list is
@@ -240,13 +238,13 @@ public class SimplePlaneModel implements PlaneModel {
 	 * 		sequential children, may be empty
 	 */
 	public static List<Vector3f> extractPositions(Node model, String base) {
-		
+
 		boolean found = true;
 		int index = 0;
-		
+
 		List<Vector3f> positions = new ArrayList<Vector3f>();
-		
-		
+
+
 		do {
 			Spatial s = model.getChild(base + index);
 			found = (s != null);
@@ -255,13 +253,13 @@ public class SimplePlaneModel implements PlaneModel {
 			}
 			index++;
 		} while (found);
-		
-		
+
+
 		return positions;
 	}
 
 	/**
-	 * Extract a sequence of child nodes of the 
+	 * Extract a sequence of child nodes of the
 	 * given model node, where the sequence must be named with the
 	 * specified base, and a consecutive sequence of integers beginning
 	 * with 0. As soon as a numbered child is missing, the list is
@@ -274,13 +272,13 @@ public class SimplePlaneModel implements PlaneModel {
 	 * 		A list of the numbered sequential child nodes, may be empty
 	 */
 	public static List<Node> extractNodes(Node model, String base) {
-		
+
 		boolean found = true;
 		int index = 0;
-		
+
 		List<Node> nodes = new ArrayList<Node>();
-		
-		
+
+
 		do {
 			Spatial s = model.getChild(base + index);
 			found = (s instanceof Node);
@@ -289,8 +287,8 @@ public class SimplePlaneModel implements PlaneModel {
 			}
 			index++;
 		} while (found);
-		
-		
+
+
 		return nodes;
 	}
 

@@ -27,9 +27,9 @@ import java.nio.FloatBuffer;
 
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
-import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.TexCoords;
 import com.jme.system.DisplaySystem;
 
 /**
@@ -49,8 +49,8 @@ public class Gauge180 extends Quad implements Gauge {
 
 	/**
 	 * Create a gauge.
-	 * The center of the gauge (the point it "rotates" about to fill up) 
-	 * is at the center of the Spatial 
+	 * The center of the gauge (the point it "rotates" about to fill up)
+	 * is at the center of the Spatial
 	 * @param value
 	 * 		The initial gauge value
 	 * @param startAngle
@@ -74,13 +74,13 @@ public class Gauge180 extends Quad implements Gauge {
 	 * 		The texture to use for the gauge
 	 */
 	public Gauge180(
-			String name, 
-			float value, 
-			float startAngle, 
-			float maxAngle, 
+			String name,
+			float value,
+			float startAngle,
+			float maxAngle,
 			boolean clockwise,
 			boolean spinTexture,
-			float size, Texture t) {		
+			float size, Texture t) {
 		super(name, size/2, size);
 		this.maxAngle = maxAngle;
 		this.startAngle = startAngle;
@@ -102,25 +102,26 @@ public class Gauge180 extends Quad implements Gauge {
 	}
 
 	private void rotateTexture(float angle) {
-		FloatBuffer texBuf = getTextureBuffer( 0, 0 );
-		texBuf.clear();
-		float xm = FastMath.sin(angle) * 0.5f;
-		float ym = FastMath.cos(angle) * 0.5f;
-		texBuf.put( 0.5f - xm - ym  ).put( 0.5f -ym + xm );	//0
-		texBuf.put( 0.5f + xm - ym ).put( 0.5f + ym + xm );	//1
-		texBuf.put( 0.5f + xm ).put( 0.5f + ym );			//2
-		texBuf.put( 0.5f - xm ).put( 0.5f - ym );			//3
+        float xm = FastMath.sin(angle) * 0.5f;
+        float ym = FastMath.cos(angle) * 0.5f;
+
+        final TexCoords texCoords = getTextureCoords(0);
+        final FloatBuffer buf = texCoords.coords;
+        buf.clear();
+        buf.put( 0.5f - xm - ym  ).put( 0.5f -ym + xm );	//0
+		buf.put( 0.5f + xm - ym ).put( 0.5f + ym + xm );	//1
+		buf.put( 0.5f + xm ).put( 0.5f + ym );			//2
+		buf.put( 0.5f - xm ).put( 0.5f - ym );			//3
 	}
 
 	private void rotateQuad(float angle, float size) {
-        TriangleBatch batch = getBatch(0);
-		batch.getVertexBuffer().clear();
+		getVertexBuffer().clear();
 		float xm = FastMath.sin(angle) * 0.5f * size;
 		float ym = FastMath.cos(angle) * 0.5f * size;
-		batch.getVertexBuffer().put( xm - ym  ).put( ym + xm ).put( 0 );	//0
-		batch.getVertexBuffer().put( -xm - ym ).put( -ym + xm ).put( 0 );	//1
-		batch.getVertexBuffer().put( -xm ).put( -ym ).put( 0 );				//2
-		batch.getVertexBuffer().put( xm ).put(  ym ).put( 0 );				//3
+		getVertexBuffer().put( xm - ym  ).put( ym + xm ).put( 0 );	//0
+		getVertexBuffer().put( -xm - ym ).put( -ym + xm ).put( 0 );	//1
+		getVertexBuffer().put( -xm ).put( -ym ).put( 0 );				//2
+		getVertexBuffer().put( xm ).put(  ym ).put( 0 );				//3
 	}
 
 	public float getValue() {
@@ -143,7 +144,7 @@ public class Gauge180 extends Quad implements Gauge {
 				rotateTexture(FastMath.PI  + value * maxAngle);
 			}
 		}
-		
+
 		//Remember new value
 		this.value = value;
 	}

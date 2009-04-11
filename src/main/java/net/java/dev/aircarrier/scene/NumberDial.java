@@ -44,10 +44,10 @@ public class NumberDial {
 	private static Texture defaultTexture;
 	private static TextureState defaultTextureState;
 	private static CullState cullState;
-	
+
 	/**
 	 * Create a node with number dial, using default texture state
-	 * @throws IOException 
+	 * @throws IOException
 	 * 		If model cannot be loaded
 	 */
 	public static Node createNumberDial() throws IOException {
@@ -56,26 +56,26 @@ public class NumberDial {
 		}
 		return createNumberDial(defaultTextureState);
 	}
-	
+
 	/**
 	 * Create a node with number dial, using specified texture state
 	 * @param textureState
-	 * 		Texture for the number dial 
-	 * @throws IOException 
+	 * 		Texture for the number dial
+	 * @throws IOException
 	 * 		If model cannot be loaded
 	 */
 	public static Node createNumberDial(TextureState textureState) throws IOException {
-				
-		//Load the model 
+
+		//Load the model
 		JmeBinaryReader jbr = new JmeBinaryReader();
 		Node model = jbr.loadBinaryFormat(NumberDial.class.getClassLoader()
 				.getResourceAsStream("resources/numberDial.jme"));
 		model.updateGeometricState(0, true);
-		        
+
 		model.getChild(0).getLocalRotation().fromAngles(FastMath.PI/2f, FastMath.PI/2f, 0);
-				
+
 		System.out.println("Dial: " + model.getChild(0));
-		
+
         //Set the model's render states correctly
 		model.setRenderState(textureState);
 		model.setRenderState(cullState);
@@ -85,23 +85,23 @@ public class NumberDial {
 	}
 
 	static void initialize() {
-		
+
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
 
 		//Texture has a default strip of numbers
 		defaultTexture = TextureManager.loadTexture(NumberDial.class
 				.getClassLoader().getResource("resources/numberDial.png"),
-				Texture.MM_NONE, Texture.FM_LINEAR);
+                Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear);
 
 		//Default texture state
 		defaultTextureState = display.getRenderer().createTextureState();
 		defaultTextureState.setTexture(defaultTexture);
-		
+
 		//CullState
 		cullState = display.getRenderer().createCullState();
-		cullState.setCullMode(CullState.CS_BACK);
+		cullState.setCullFace(CullState.Face.Back);
 	}
-	
-	
-		
+
+
+
 }

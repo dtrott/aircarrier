@@ -10,7 +10,7 @@ import com.jme.scene.state.RenderState;
 public class SpatialRenderStateClearer implements SpatialAction {
 
 	private static SpatialRenderStateClearer instance = new SpatialRenderStateClearer();
-	
+
 	/**
 	 * @return
 	 * 		A single shared instance of the clearer, since it has no state
@@ -18,17 +18,15 @@ public class SpatialRenderStateClearer implements SpatialAction {
 	public static SpatialRenderStateClearer getInstance() {
 		return instance;
 	}
-	
+
 	private SpatialRenderStateClearer() {
 	}
-	
+
 	public void actOnSpatial(Spatial spatial) {
-		spatial.clearRenderState(RenderState.RS_ALPHA);
-		spatial.clearRenderState(RenderState.RS_ATTRIBUTE);
+        spatial.clearRenderState(RenderState.RS_BLEND);
 		spatial.clearRenderState(RenderState.RS_CLIP);
 		spatial.clearRenderState(RenderState.RS_COLORMASK_STATE);
 		spatial.clearRenderState(RenderState.RS_CULL);
-		spatial.clearRenderState(RenderState.RS_DITHER);
 		spatial.clearRenderState(RenderState.RS_FOG);
 		spatial.clearRenderState(RenderState.RS_FRAGMENT_PROGRAM);
 		spatial.clearRenderState(RenderState.RS_GLSL_SHADER_OBJECTS);

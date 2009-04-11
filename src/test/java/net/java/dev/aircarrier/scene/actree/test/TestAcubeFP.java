@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -35,7 +35,6 @@ package net.java.dev.aircarrier.scene.actree.test;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jmetest.terrain.TestTerrain;
 import net.java.dev.aircarrier.scene.CarrierSkyBox;
 import net.java.dev.aircarrier.scene.actree.ACube;
 import net.java.dev.aircarrier.scene.actree.AFace;
@@ -70,21 +69,21 @@ public class TestAcubeFP extends AcubeGame {
 	CarrierSkyBox skyBox;
 	OctoBox octoBox;
 	Vector3f octoV = new Vector3f(
-			0, 
-			0, 
+			0,
+			0,
 			0);
-	
+
 	Vector3f walkForward = new Vector3f();
 	Vector3f walkLeft = new Vector3f();
 	Vector3f worldUp = new Vector3f(0, 1, 0);
-	
+
 	Vector3f walkVector = new Vector3f();
-	
+
 	Vector3f cornerPos = new Vector3f();
 	float speed = 3.5f;
 	float jump = 6f;
 	float g = 12f;
-	
+
 	/**
 	 * Entry point for the test,
 	 *
@@ -92,26 +91,27 @@ public class TestAcubeFP extends AcubeGame {
 	 */
 	public static void main(String[] args) {
 		Logger.getLogger("").setLevel(Level.WARNING);
-		
+
 		TestAcubeFP app = new TestAcubeFP();
 		app.samples = 4;
-		app.setDialogBehaviour(ALWAYS_SHOW_PROPS_DIALOG);
+
+        app.setConfigShowMode(ConfigShowMode.AlwaysShow);
 		app.start();
 	}
 
 	@Override
 	protected void simpleUpdate() {
 		super.simpleUpdate();
-		
+
 		//Work out forward and left directions for movement based on camera and y axis
 		Vector3f camForward = cam.getDirection();
-		
+
 		walkLeft.set(worldUp);
 		walkLeft.crossLocal(camForward).normalizeLocal();
-		
+
 		walkForward.set(walkLeft);
 		walkForward.crossLocal(worldUp).normalizeLocal();
-		
+
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("f", true)) {
 		} else if (KeyBindingManager.getKeyBindingManager().isValidCommand("b", true)) {
 			walkForward.multLocal(-1);
@@ -128,10 +128,10 @@ public class TestAcubeFP extends AcubeGame {
 		walkVector.set(0,0,0);
 		walkVector.addLocal(walkLeft).addLocal(walkForward);
 		walkVector.normalizeLocal().multLocal(speed);
-		
-		octoV.set(0, walkVector.get(0));		
-		octoV.set(2, walkVector.get(2));		
-		
+
+		octoV.set(0, walkVector.get(0));
+		octoV.set(2, walkVector.get(2));
+
 		//If we are not standing on the ground, accelerate downwards
 		if (!octoBox.getTouching()[0][1]) {
 			octoV.set(1, octoV.get(1) - tpf * g);
@@ -139,7 +139,7 @@ public class TestAcubeFP extends AcubeGame {
 		} else {
 			if (octoV.get(1) < 0) octoV.set(1, 0);
 		}
-		
+
 		//If we hit our head, then vertical velocity cannot be positive
 		if (octoBox.getTouching()[1][1]) {
 			if (octoV.get(1) > 0) {
@@ -153,21 +153,21 @@ public class TestAcubeFP extends AcubeGame {
         if (KeyBindingManager.getKeyBindingManager().isValidCommand("d", true)) {
         	octoV.set(1, -speed);
         }
-        
+
         if (KeyBindingManager.getKeyBindingManager().isValidCommand("jump", false)
         		&& octoBox.getTouching()[0][1]) {
         	octoV.set(1, jump);
         }
 
-		
+
 		//Skybox follows camera
 		skyBox.setLocalTranslation(cam.getLocation());
-		
+
 		//Shift the colliding box along
 		octoBox.slideAlong(octoV, tpf);
 		//octoBox.slide(octoV, tpf, null);
 		box.getLocalTranslation().set(octoBox.getPosition());
-		
+
 		/*
 		for (int xo = 0; xo < 2; xo++) {
 			for (int yo = 0; yo < 2; yo++) {
@@ -181,47 +181,44 @@ public class TestAcubeFP extends AcubeGame {
 			}
 		}
 		*/
-		
+
 		cam.getLocation().set(octoBox.getPosition().getX(), octoBox.getPosition().getY() + 0.3f, octoBox.getPosition().getZ());
 		cam.update();
-		
+
 	}
 
 	public final static Texture sss;
 	static {
-		sss = TextureManager.loadTexture(TestTerrain.class.getClassLoader().getResource(
+		sss = TextureManager.loadTexture(TestAcubeFP.class.getClassLoader().getResource(
 				"resources/blackBoxSSS.png"),
-				Texture.MM_LINEAR_LINEAR,
-				Texture.FM_LINEAR);
+            Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear);
 	}
 
 	public final static Texture green;
 	static {
-		green = TextureManager.loadTexture(TestTerrain.class.getClassLoader().getResource(
+		green = TextureManager.loadTexture(TestAcubeFP.class.getClassLoader().getResource(
 				"resources/green.png"),
-				Texture.MM_LINEAR_LINEAR,
-				Texture.FM_LINEAR);
+            Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear);
 	}
 
 	public final static Texture crete;
 	private CubeGrid grid;
 	private Box box;
-	
+
 	//private Box[] corners;
-	
+
 	static {
-		crete = TextureManager.loadTexture(TestTerrain.class.getClassLoader().getResource(
+		crete = TextureManager.loadTexture(TestAcubeFP.class.getClassLoader().getResource(
 				"resources/render.png"),
-				Texture.MM_LINEAR_LINEAR,
-				Texture.FM_LINEAR);
+            Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear);
 	}
 
-	
+
 	/**
 	 * Set up systems
 	 */
 	protected void simpleInitGame() {
-		
+
 		display.setTitle("Terrain Test");
 		cam.setLocation(new Vector3f());
 		cam.update();
@@ -231,14 +228,14 @@ public class TestAcubeFP extends AcubeGame {
 		rootNode.setRenderState(fs);
 
 		CullState cs = display.getRenderer().createCullState();
-		cs.setCullMode(CullState.CS_BACK);
+		cs.setCullFace(CullState.Face.Back);
 		cs.setEnabled(true);
 
         ColorRGBA color = new ColorRGBA(0.4f, 0.5f, 0.65f, 1f);
         display.getRenderer().setBackgroundColor(color);
-        
+
 		lightState.setEnabled(false);
-		
+
         KeyBindingManager.getKeyBindingManager().set("f", KeyInput.KEY_W);
         KeyBindingManager.getKeyBindingManager().set("b", KeyInput.KEY_S);
         KeyBindingManager.getKeyBindingManager().set("l", KeyInput.KEY_A);
@@ -247,7 +244,7 @@ public class TestAcubeFP extends AcubeGame {
         KeyBindingManager.getKeyBindingManager().set("d", KeyInput.KEY_Z);
         KeyBindingManager.getKeyBindingManager().set("jump", KeyInput.KEY_SPACE);
 
-		
+
 		/*
 		lightState.setTwoSidedLighting(true);
 		Debugger.AUTO_NORMAL_RATIO = .02f;
@@ -255,14 +252,14 @@ public class TestAcubeFP extends AcubeGame {
 		((PointLight) lightState.get(0))
 				.setLocation(new Vector3f(100, 500, 50));
 */
-		
+
 		rootNode.setRenderState(cs);
-        
+
 		skyBox = new CarrierSkyBox("Sky", "resources/bsky", ".jpg");
 		rootNode.attachChild(skyBox);
 		Quaternion skyQ = new Quaternion(new float[]{0,FastMath.PI * -0.75f,0});
 		skyBox.setLocalRotation(skyQ);
-		
+
 		/*
 		grid = new CubeGrid(8);
 		Random r = new Random(101);
@@ -279,7 +276,7 @@ public class TestAcubeFP extends AcubeGame {
 		*/
 
 
-		
+
 		grid = new CubeGrid(5);
 		for (int x = 0; x < 20; x++) {
 			for (int y = 0; y < 20; y++) {
@@ -296,7 +293,7 @@ public class TestAcubeFP extends AcubeGame {
 
 		grid.setPresence(new BVector3i(2, 9, 9), true);
 
-		
+
 
 		makeArch(grid, 9, 2, 9, false);
 		makeArch(grid, 9, 5, 9, false);
@@ -306,15 +303,15 @@ public class TestAcubeFP extends AcubeGame {
 		makeArch(grid, 12, 8, 9, false);
 
 		makeArch(grid, 9, 2, 6, true);
-		
+
 		//Node gridRoot = new Node("gridRoot");
 
-		
-		
-		
+
+
+
 		grid.buildAllCubes();
-		
-		
+
+
 		for (int x = 0; x < 20; x++) {
 			for (int y = 0; y < 20; y++) {
 				for (int z = 0; z < 20; z++) {
@@ -332,13 +329,13 @@ public class TestAcubeFP extends AcubeGame {
 			}
 		}
 
-		
+
 		Node gridRoot = grid.getOctode();
 		setupFog(gridRoot);
 		gridRoot.updateRenderState();
 
 		grid.shade(CubeGrid.DEFAULT_BASE_COLOR, CubeGrid.DEFAULT_DARK_COLOR, CubeGrid.DEFAULT_FACE_COLORS);
-		
+
 		rootNode.attachChild(gridRoot);
 		//gridRoot.rotateUpTo(new Vector3f(0, 0, 1));
 		gridRoot.updateModelBound();
@@ -358,10 +355,10 @@ public class TestAcubeFP extends AcubeGame {
 		mState.setDiffuse(ColorRGBA.blue);
 		TextureState ts2 = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 		ts2.setTexture(green, 0);
-		
+
 		/*
 		corners = new Box[8];
-		
+
 		for (int i = 0; i < corners.length; i++) {
 			corners[i] = new Box("corner " + i, new Vector3f(), 0.5f, 0.5f, 0.5f);
 			rootNode.attachChild(corners[i]);
@@ -370,13 +367,13 @@ public class TestAcubeFP extends AcubeGame {
 			corners[i].setRenderState(ts2);
 		}
 		*/
-		
+
 		rootNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
-				
+
 		fpsNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
 
 		octoBox = new OctoBox(grid, new Vector3f(0.4f, 0.9f, 0.4f), new Vector3f(10, 32, 10));
-		
+
 	}
 
 	private void setupFog(Node node) {
@@ -387,11 +384,10 @@ public class TestAcubeFP extends AcubeGame {
 		fs.setColor(skyColor);
 		fs.setEnd(35);
 		fs.setStart(2);
-		fs.setDensityFunction(FogState.DF_LINEAR);
-		fs.setApplyFunction(FogState.AF_PER_VERTEX);
-		node.setRenderState(fs);		
+		fs.setDensityFunction(FogState.DensityFunction.Linear);
+		node.setRenderState(fs);
 	}
-	
+
 	private void makeArch(CubeGrid grid, int x, int y, int z, boolean east) {
 		int xo = east ? 1 : 0;
 		int yo = 1 - xo;
@@ -406,5 +402,5 @@ public class TestAcubeFP extends AcubeGame {
 		grid.setPresence(new BVector3i(x+3*xo, y+3*yo, z-1), true);
 		grid.setPresence(new BVector3i(x+3*xo, y+3*yo, z), true);
 	}
-	
+
 }

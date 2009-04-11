@@ -31,7 +31,7 @@ import com.jme.image.Texture;
 import com.jme.math.Quaternion;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
@@ -44,38 +44,38 @@ import com.jme.util.TextureManager;
 
 public class MuzzleFlash {
 
-	private static AlphaState alphaState;
+	private static BlendState blendState;
 	private static Texture texture;
 	static TextureState textureState;
 	static LightState noLight;
 	static ZBufferState zBufferState;
-	
+
 	/**
-	 * Create a node with muzzle flash geometry 
-	 * @throws IOException 
+	 * Create a node with muzzle flash geometry
+	 * @throws IOException
 	 * 		If model cannot be loaded
 	 */
 	public static Node createMuzzleFlash() throws IOException {
-		
-		if (alphaState == null) {
+
+		if (blendState == null) {
 			initialize();
 		}
-		
-		//Load the model 
+
+		//Load the model
 		JmeBinaryReader jbr = new JmeBinaryReader();
 		Node model = jbr.loadBinaryFormat(MuzzleFlash.class.getClassLoader()
 				.getResourceAsStream("resources/muzzle_flash.jme"));
 		model.updateGeometricState(0, true);
-		        
+
 		model.getChild(0).setLocalRotation(new Quaternion(new float[]{(float)(0),0,0}));
-		
+
         //Set the model's render states correctly
 		model.setRenderState(textureState);
-		model.setRenderState(alphaState);
+		model.setRenderState(blendState);
 		model.setRenderState(noLight);
 		model.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 		model.setRenderState(zBufferState);
-		
+
 		model.updateRenderState();
 
 		//FIXME work out shared mesh and use
@@ -83,21 +83,21 @@ public class MuzzleFlash {
 	}
 
 	static void initialize() {
-		
+
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
 
 		//Alpha state for all bullets adds the texture to anything behind it
-		alphaState = display.getRenderer().createAlphaState();
-		alphaState.setBlendEnabled( true );
-		alphaState.setSrcFunction( AlphaState.SB_SRC_ALPHA );
-		alphaState.setDstFunction( AlphaState.DB_ONE );
-		alphaState.setTestEnabled(true);
-		alphaState.setEnabled( true );
-		
+		blendState = display.getRenderer().createBlendState();
+		blendState.setBlendEnabled( true );
+		blendState.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+		blendState.setDestinationFunction(BlendState.DestinationFunction.One);
+		blendState.setTestEnabled(true);
+		blendState.setEnabled( true );
+
 		//Texture has an elongated tracer blur
 		texture = TextureManager.loadTexture(MuzzleFlash.class
 				.getClassLoader().getResource("resources/plain_bullet3.png"),
-				Texture.MM_NONE, Texture.FM_LINEAR);
+                Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear);
 
 		//Texture state for all bullets
 		textureState = display.getRenderer().createTextureState();
@@ -114,8 +114,8 @@ public class MuzzleFlash {
         //render queue is used, this should work out).
         zBufferState = display.getRenderer().createZBufferState();
         zBufferState.setEnabled(true);
-        zBufferState.setFunction(ZBufferState.CF_LEQUAL);
-        zBufferState.setWritable(false);		
+        zBufferState.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
+        zBufferState.setWritable(false);
 	}
-		
+
 }

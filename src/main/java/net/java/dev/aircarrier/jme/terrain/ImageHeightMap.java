@@ -57,25 +57,25 @@ public class ImageHeightMap extends AbstractHeightMap {
 	 */
 	@Override
 	public boolean load() {
-		heightData = new int[size*size];
-		
+		heightData = new float[size*size];
+
 		//Make a scaled copy of the image
 		BufferedImage scaled = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = (Graphics2D)scaled.getGraphics();
-		
+
 		g.drawImage(image, 0, 0, size, size, null);
-		
+
 		//Set the heightmap pixel by pixel
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
 				int p = scaled.getRGB(x, size-1-y);
 				Color c = new Color(p);
 				setHeightAtPoint(c.getRed(), x, y);
-			}			
+			}
 		}
-		
+
 		return true;
 	}
 
-	
+
 }

@@ -11,7 +11,6 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
 import com.jmex.physics.DynamicPhysicsNode;
 import com.jmex.physics.material.Material;
@@ -54,27 +53,27 @@ public class Plane implements NamedValuesBean, MovableAcobject {
 	PlanePhysicsHandler physicsHandler;
 	InputHandler input;
 	DynamicPhysicsNode planePhysicsNode;
-	
+
 	List<DebrisController> debrisControllers;
-	
+
 	List<String> valueNames;
-	
+
 	float heading;
-	
+
 	Vector3f horizontalHeading = new Vector3f();
 
 	MovableAcobjectSpatialDelegate movableDelegate;
-	
+
 	public Plane(
 			Node worldNode,
 			PhysicsSpaceExtended physicsSpace,
 			InputHandler input,
-			List<ShootableNode> shootNodes, 
-			CarrierTerrainPage terrain, 
+			List<ShootableNode> shootNodes,
+			CarrierTerrainPage terrain,
 			PlaneModel planeModel,
 			HitEffectPool hitEffectPool,
 			ReusableSource<Bullet> bulletSource) throws IOException {
-		
+
 		this.worldNode = worldNode;
 		this.physicsSpace = physicsSpace;
 		this.input = input;
@@ -83,28 +82,28 @@ public class Plane implements NamedValuesBean, MovableAcobject {
 		this.planeModel = planeModel;
 		this.hitEffectPool = hitEffectPool;
 		this.bulletSource = bulletSource;
-				
+
 		//Make bullet manager
-		bulletManager = new BulletManager();						
+		bulletManager = new BulletManager();
 		bulletManager.setShootNodes(shootNodes);
 		bulletManager.setTerrain(terrain);
 		bulletManager.setHitEffectsSource(hitEffectPool);
-		
+
 		//Make plane node
 		planeNode = new PlaneNode("Plane", planeModel, worldNode, bulletSource, bulletManager);
 
 		//Make plane assembly
 		planeAssembly = new PlaneAssembly("Plane Assembly", planeNode);
-		
+
 		movableDelegate = new MovableAcobjectSpatialDelegate(planeAssembly.getBase(), "plane", "plane", planeNode.getAvoidanceNode().getRadius());
-		
+
 		//Make plane controller - initially just static controls, we expect these to
 		//be replaced
 		planeController = new PlaneController(this, new StoringPlaneControls(0));
 
 		//Make physics node to represent plane for non-bullet collision
 		planePhysicsNode = makePhysicsNode(planeModel.getPhysicsBounds());
-		
+
         //Line the physics node up with the plane assembly
         planePhysicsNode.getLocalTranslation().set(planeAssembly.getBase().getWorldTranslation());
 
@@ -113,18 +112,18 @@ public class Plane implements NamedValuesBean, MovableAcobject {
 		physicsSpace.setDefaultMaterial(Material.ICE);
 
 		//Don't show the plane physics object
-		planePhysicsNode.setCullMode(SceneElement.CULL_ALWAYS);
+		planePhysicsNode.setCullHint(Spatial.CullHint.Always);
 
         //Make a new physics handler
-        physicsHandler = 
+        physicsHandler =
         	new PlanePhysicsHandler(
-        			input, 
-        			physicsSpace, 
+        			input,
+        			physicsSpace,
         			planePhysicsNode,
         			planeAssembly,
         			0.2f);
 
-                
+
         EventShootableNode shootableNode = new EventShootableNode("Shootable node");
 
         //Make shootable nodes
@@ -133,7 +132,7 @@ public class Plane implements NamedValuesBean, MovableAcobject {
             b.setModelBound(new BoundingSphere());
             b.updateModelBound();
     		shootableNode.attachChild(b);
-    		b.setCullMode(Spatial.CULL_ALWAYS);
+    		b.setCullHint(Spatial.CullHint.Always);
         }
 
         //Attach the shootable node itself to the plane
@@ -141,11 +140,11 @@ public class Plane implements NamedValuesBean, MovableAcobject {
 
         //We only need to add the shootable node - pick will pick on its individual children
 		shootNodes.add(shootableNode);
-		
+
 		//We don't want to shoot ourself
 		bulletManager.setIgnoreShootNode(shootableNode);
-		
-		
+
+
 		//Listen for shots
 		shootableNode.addListener(new ShotListener() {
 			public void shot(Bullet b, ShootableNode n) {
@@ -166,37 +165,37 @@ public class Plane implements NamedValuesBean, MovableAcobject {
         	dc.setShootNodes(shootNodes);
         	dc.setIgnoreShootNode(shootableNode);
         	dc.setTerrain(terrain);
-        	
+
         	d.addController(dc);
-        	
+
         	debrisControllers.add(dc);
-        }     
-		
+        }
+
         //Make list of value names
         valueNames = new ArrayList<String>();
         valueNames.add("speed");
         valueNames.add("health");
-        
+
 	}
-	
+
 	void respawn() {
 		//Switch physics nodes back on, realign to starting positions on plane, set visible
 		for (int i = 0; i < debrisControllers.size(); i++) {
 			DebrisController dc = debrisControllers.get(i);
-			
+
 			//Set debris active - resets and restarts physics and particles
 			Node startPosition = planeModel.getWreckageStartPositions().get(i);
 			dc.respawn(startPosition, getVelocity());
 		}
-		
+
 		//Set plane to new position and respawn
 		setPosition(new Vector3f(50 * FastMath.rand.nextFloat() * 3, 550, 50 * FastMath.rand.nextFloat() * 3));
 		//setPosition(new Vector3f(0, 500 + 50 * FastMath.rand.nextFloat() * 3, 0));
 		System.out.println("DESTROYED!");
-		
-		planeNode.respawn();		
+
+		planeNode.respawn();
 	}
-	
+
 	/**
 	 * Make a dynamic physics node representing the specified spatial,
 	 * using OBB bounds and computed mass, and attach that physics
@@ -215,28 +214,28 @@ public class Plane implements NamedValuesBean, MovableAcobject {
 		bounds.updateModelBound();
 		physicsNode.attachChild(bounds);
 		physicsNode.generatePhysicsGeometry();
-		
+
         worldNode.attachChild( physicsNode );
         physicsNode.computeMass();
-		
+
         return physicsNode;
 	}
-	
+
 	public void setPosition(Vector3f to) {
 		planeAssembly.getBase().getLocalTranslation().set(to);
 		//Realign physics node for sudden jump
         planePhysicsNode.getLocalTranslation().set(planeAssembly.getBase().getWorldTranslation());
         planeAssembly.getBase().updateWorldData(0);
 	}
-	
+
 	public void update(float time) {
-		
+
 		planeController.getControls().update(time);
 		planeController.update(time);
 		planeNode.update(time);
-		
+
 		//Calculate heading
-		
+
 		//Get horizontal heading
 		planeAssembly.getBase().getLocalRotation().getRotationColumn(2, horizontalHeading);
 		horizontalHeading.setY(0);
@@ -245,13 +244,13 @@ public class Plane implements NamedValuesBean, MovableAcobject {
 
 		//FIXME is there a faster way?
 		heading = -FastMath.atan2(horizontalHeading.getX(), horizontalHeading.getZ());
-		
+
 	}
-	
+
 	public void setControls(PlaneControls controls) {
 		planeController.setControls(controls);
 	}
-	
+
 	public PlaneControls getControls() {
 		return planeController.getControls();
 	}
@@ -263,15 +262,15 @@ public class Plane implements NamedValuesBean, MovableAcobject {
 	public PlaneController getPlaneController() {
 		return planeController;
 	}
-	
+
 	public float getHealth() {
 		return planeNode.getHealth();
 	}
-	
+
 	public float getCurrentSpeed() {
 		return planeController.getCurrentSpeed();
 	}
-	
+
 	public float getHeading() {
 		return heading;
 	}
@@ -279,7 +278,7 @@ public class Plane implements NamedValuesBean, MovableAcobject {
 	public PlaneNode getPlaneNode() {
 		return planeNode;
 	}
-	
+
 	public float getNamedValue(String name) {
 		if (name.equals("speed")) return getCurrentSpeed();
 		if (name.equals("health")) return getHealth();
@@ -298,7 +297,7 @@ public class Plane implements NamedValuesBean, MovableAcobject {
 	public Node getBase() {
 		return planeAssembly.getBase();
 	}
-	
+
 	public String getName() {
 		return movableDelegate.getName();
 	}
@@ -346,5 +345,5 @@ public class Plane implements NamedValuesBean, MovableAcobject {
 	public void setRotation(Quaternion rotation) {
 		movableDelegate.setRotation(rotation);
 	}
-	
+
 }

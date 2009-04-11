@@ -23,8 +23,6 @@
 
 package net.java.dev.aircarrier.scene;
 
-import jmetest.renderer.TestBoxColor;
-
 import com.jme.app.SimpleGame;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
@@ -35,7 +33,7 @@ import com.jme.util.TextureManager;
 
 /**
  * <code>TestLightState</code>
- * 
+ *
  * @author Mark Powell
  * @version $Id: TestEllipsoidNode.java,v 1.2 2006/07/21 23:59:47 shingoki Exp $
  */
@@ -43,18 +41,18 @@ public class TestEllipsoidNode extends SimpleGame {
 
 	/**
 	 * Entry point for the test,
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		TestEllipsoidNode app = new TestEllipsoidNode();
-		app.setDialogBehaviour(ALWAYS_SHOW_PROPS_DIALOG);
-		app.start();
+		app.setConfigShowMode(ConfigShowMode.AlwaysShow);
+        app.start();
 	}
 
 	/**
 	 * builds the trimesh.
-	 * 
+	 *
 	 * @see com.jme.app.SimpleGame#initGame()
 	 */
 	protected void simpleInitGame() {
@@ -69,9 +67,10 @@ public class TestEllipsoidNode extends SimpleGame {
 		TextureState ts = display.getRenderer().createTextureState();
 		ts.setEnabled(true);
 		Texture t1 = TextureManager.loadTexture(
-				TestBoxColor.class.getClassLoader().getResource(
+				TestEllipsoidNode.class.getClassLoader().getResource(
 						"jmetest/data/images/Monkey.jpg"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+            Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear);
+
 		ts.setTexture(t1);
 		q.setRenderState(ts);
 
@@ -79,7 +78,7 @@ public class TestEllipsoidNode extends SimpleGame {
 		ellipsoid.attachChild(q);
 
 		rootNode.attachChild(ellipsoid);
-		
+
 		rootNode.attachChild(new Cylinder("cyl", 6, 6, 0.1f, 1f));
 	}
 }

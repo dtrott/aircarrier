@@ -32,15 +32,13 @@
 
 package net.java.dev.aircarrier.pass;
 
-import jmetest.renderer.TestEnvMap;
-
 import com.jme.app.SimplePassGame;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.pass.RenderPass;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
+import com.jme.scene.Spatial;
 import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.CullState;
@@ -59,7 +57,7 @@ public class TestAlternateCameraRenderPass extends SimplePassGame {
 
 	public static void main( String[] args ) {
 		TestAlternateCameraRenderPass app = new TestAlternateCameraRenderPass();
-		app.setDialogBehaviour( ALWAYS_SHOW_PROPS_DIALOG );
+		app.setConfigShowMode(ConfigShowMode.AlwaysShow);
 		app.start();
 	}
 
@@ -80,30 +78,32 @@ public class TestAlternateCameraRenderPass extends SimplePassGame {
 	    TextureState ts = display.getRenderer().createTextureState();
 	    //Base texture, not environmental map.
 	    Texture t0 = TextureManager.loadTexture(
-	            TestEnvMap.class.getClassLoader().getResource(
+	            TestAlternateCameraRenderPass.class.getClassLoader().getResource(
 	            "jmetest/data/images/logo.jpg"),
-	        Texture.MM_LINEAR_LINEAR,
-	        Texture.FM_LINEAR);
+
+            Texture.MinificationFilter.BilinearNearestMipMap, Texture.MagnificationFilter.Bilinear);
+
+
 	    ts.setTexture(t0);
 
 		Quad hudQuad = new Quad("hudQuad", 128, 128);
 		hudQuad.setLocalTranslation(0, 0, 200);
 		hudQuad.setRenderState(ts);
 		CullState cs = display.getRenderer().createCullState();
-		cs.setCullMode(CullState.CS_BACK);
+		cs.setCullFace(CullState.Face.Back);
 		hudQuad.setRenderState(cs);
 
 		Box box = new Box("box", new Vector3f(), 1, 1, 1);
 	    //box.setRenderState(ts);
-	    
+
 		rootNode.attachChild(box);
-		
+
 		Node hudNode = new Node("hudNode");
 		LightState ls = display.getRenderer().createLightState();
 		ls.setEnabled(false);
-		
+
 		hudNode.attachChild(hudQuad);
-		
+
 		RenderPass rootPass = new RenderPass();
 		rootPass.add( rootNode );
 		pManager.add( rootPass );
@@ -113,14 +113,16 @@ public class TestAlternateCameraRenderPass extends SimplePassGame {
 		pManager.add(altPass);
 
 		RenderPass fpsPass = new RenderPass();
-		fpsPass.add( fpsNode );
+        // DJT TODO
+		//fpsPass.add( fpsNode );
 		pManager.add( fpsPass );
 
-		
-		rootNode.setCullMode( SceneElement.CULL_NEVER );
+
+		rootNode.setCullHint(Spatial.CullHint.Never);
 		rootNode.setRenderQueueMode( Renderer.QUEUE_OPAQUE );
-		fpsNode.setRenderQueueMode( Renderer.QUEUE_OPAQUE );
-		
+        // DJT TODO
+		//fpsNode.setRenderQueueMode( Renderer.QUEUE_OPAQUE );
+
 		hudNode.updateRenderState();
 		hudNode.updateGeometricState(0, true);
 	}

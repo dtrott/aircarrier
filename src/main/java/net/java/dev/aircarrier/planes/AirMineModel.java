@@ -25,8 +25,6 @@ package net.java.dev.aircarrier.planes;
 
 import java.io.IOException;
 
-import jmetest.renderer.TestEnvMap;
-
 import net.java.dev.aircarrier.GunbirdMesh;
 import net.java.dev.aircarrier.model.XMLparser.JmeBinaryReader;
 
@@ -42,15 +40,15 @@ import com.jme.util.TextureManager;
 public class AirMineModel {
 
 	private Node model;
-	
+
 	public AirMineModel() throws IOException {
-		
+
 		JmeBinaryReader jbr = new JmeBinaryReader();
 		jbr.setProperty("bound", "sphere");
 		model = jbr.loadBinaryFormat(AirMineModel.class.getClassLoader()
 				.getResourceAsStream("resources/airMine.jme"));
 
-		
+
 		/*
 		model = (Node)BinaryImporter.getInstance().load(NewPlaneModel.class.getClassLoader()
 				.getResourceAsStream("resources/chimera.jme"));
@@ -59,25 +57,25 @@ public class AirMineModel {
 		printTree(model, 0);
 		System.out.println("MODEL END====================");
 		*/
-		
-		CullState cullState = DisplaySystem.getDisplaySystem().getRenderer().createCullState();
-		cullState.setCullMode(CullState.CS_NONE);
-		model.setRenderState(cullState);
-		
-		model.updateRenderState();
-		
-		model.updateGeometricState(0, true);
-		
-		Texture texture = TextureManager.loadTexture(GunbirdMesh.class
-				.getClassLoader().getResource("resources/airMine.png"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
 
-		Texture envTexture = TextureManager.loadTexture(TestEnvMap.class
-				.getClassLoader()
-				.getResource("resources/sky_env_darker.jpg"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-		envTexture.setEnvironmentalMapMode(Texture.EM_SPHERE);
-		envTexture.setApply(Texture.AM_ADD);
+		CullState cullState = DisplaySystem.getDisplaySystem().getRenderer().createCullState();
+		cullState.setCullFace(CullState.Face.None);
+		model.setRenderState(cullState);
+
+		model.updateRenderState();
+
+		model.updateGeometricState(0, true);
+
+		Texture texture = TextureManager.loadTexture(GunbirdMesh.class
+                .getClassLoader().getResource("resources/airMine.png"),
+            Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+
+		Texture envTexture = TextureManager.loadTexture(AirMineModel.class
+                .getClassLoader()
+                .getResource("resources/sky_env_darker.jpg"),
+            Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+		envTexture.setEnvironmentalMapMode(Texture.EnvironmentalMapMode.SphereMap);
+		envTexture.setApply(Texture.ApplyMode.Add);
 
 		for (Object o : model.getChildren()) {
 			System.out.println(o);
@@ -102,9 +100,9 @@ public class AirMineModel {
 						|| 	n.getName().indexOf("gun") > -1
 						|| true
 				) {
-				      ts.setTexture( envTexture, 1 );					
+				      ts.setTexture( envTexture, 1 );
 				}
-				
+
 				ts.setEnabled(true);
 
 				// Set the texture to the quad
@@ -112,12 +110,12 @@ public class AirMineModel {
 
 			}
 		}
-		
+
 		model.setModelBound(new BoundingSphere());
 		model.updateModelBound();
-				
+
 	}
-	
+
 	public Node getModel() {
 		return model;
 	}

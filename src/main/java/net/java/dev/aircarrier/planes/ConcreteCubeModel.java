@@ -39,7 +39,7 @@ import com.jme.util.TextureManager;
 public class ConcreteCubeModel {
 
 	private Node model;
-	
+
 	public ConcreteCubeModel() throws IOException {
 		JmeBinaryReader jbr = new JmeBinaryReader();
 		jbr.setProperty("bound", "obb");
@@ -47,12 +47,12 @@ public class ConcreteCubeModel {
 				.getResourceAsStream("resources/concreteCube.jme"));
 
 		model.updateRenderState();
-		
+
 		model.updateGeometricState(0, true);
-		
+
 		Texture texture = TextureManager.loadTexture(GunbirdMesh.class
 				.getClassLoader().getResource("resources/concrete_cube.jpg"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
 
 		for (Object o : model.getChildren()) {
 			System.out.println(o);
@@ -76,10 +76,10 @@ public class ConcreteCubeModel {
 
 			}
 		}
-		
+
 		model.setModelBound(new OrientedBoundingBox());
 		model.updateModelBound();
-				
+
 	}
 
 	public Node getModel() {

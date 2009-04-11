@@ -18,8 +18,8 @@ import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
 import com.jme.scene.Text;
+import com.jme.scene.Spatial;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
@@ -161,11 +161,13 @@ public abstract class AcubeGame extends BaseGame {
 
         // Execute updateQueue item
         GameTaskQueueManager.getManager().getQueue(GameTaskQueue.UPDATE).execute();
-        
+
         updateBuffer.setLength( 0 );
         updateBuffer.append( "FPS: " ).append( (int) timer.getFrameRate() ).append(
                 " - " );
-        updateBuffer.append( display.getRenderer().getStatistics( tempBuffer ) );
+
+        // DJT TODO
+        //updateBuffer.append( display.getRenderer().getStatistics( tempBuffer ) );
         /** Send the fps to our fps bar at the bottom. */
         fps.print( updateBuffer );
 
@@ -174,7 +176,7 @@ public abstract class AcubeGame extends BaseGame {
                 "toggle_pause", false ) ) {
             pause = !pause;
         }
-        
+
         /** If step is a valid command (via key ADD), update scenegraph one unit. */
         if ( KeyBindingManager.getKeyBindingManager().isValidCommand(
                 "step", true ) ) {
@@ -236,7 +238,7 @@ public abstract class AcubeGame extends BaseGame {
             long totMem = Runtime.getRuntime().totalMemory();
             long freeMem = Runtime.getRuntime().freeMemory();
             long maxMem = Runtime.getRuntime().maxMemory();
-            
+
             logger.info("|*|*|  Memory Stats  |*|*|");
             logger.info("Total memory: "+(totMem>>10)+" kb");
             logger.info("Free memory: "+(freeMem>>10)+" kb");
@@ -247,7 +249,7 @@ public abstract class AcubeGame extends BaseGame {
                 false ) ) {
             finish();
         }
-        
+
         if ( !pause ) {
             /** Call simpleUpdate in any derived classes of SimpleGame. */
             simpleUpdate();
@@ -274,22 +276,24 @@ public abstract class AcubeGame extends BaseGame {
     protected void render( float interpolation ) {
         Renderer r = display.getRenderer();
         /** Reset display's tracking information for number of triangles/vertexes */
-        r.clearStatistics();
+
+        // DJT TODO
+        //r.clearStatistics();
         /** Clears the previously rendered information. */
         r.clearBuffers();
-        
+
         // Execute renderQueue item
         GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).execute();
-        
+
         /** Draw the rootNode and all its children. */
         r.draw(rootNode);
-        
+
         /** Call simpleRender() in any derived classes. */
         simpleRender();
-        
+
         /** Draw the fps node to show the fancy information at the bottom. */
         r.draw(fpsNode);
-        
+
         doDebug(r);
 
     }
@@ -307,10 +311,10 @@ public abstract class AcubeGame extends BaseGame {
             Debugger.drawNormals( rootNode, r );
             Debugger.drawTangents( rootNode, r );
         }
-        
+
         if (showDepth) {
             r.renderQueue();
-            Debugger.drawBuffer(Texture.RTT_SOURCE_DEPTH, Debugger.NORTHEAST, r);
+            Debugger.drawBuffer(Texture.RenderToTextureType.Depth, Debugger.NORTHEAST, r);
         }
 
     }
@@ -328,24 +332,24 @@ public abstract class AcubeGame extends BaseGame {
              * Get a DisplaySystem acording to the renderer selected in the
              * startup box.
              */
-            display = DisplaySystem.getDisplaySystem( properties.getRenderer() );
-            
+            display = DisplaySystem.getDisplaySystem(settings.getRenderer() );
+
             display.setMinDepthBits( depthBits );
             display.setMinStencilBits( stencilBits );
             display.setMinAlphaBits( alphaBits );
             display.setMinSamples( samples );
 
             /** Create a window with the startup box's information. */
-            display.createWindow( properties.getWidth(), properties.getHeight(),
-                    properties.getDepth(), properties.getFreq(), properties
-                    .getFullscreen() );
+            display.createWindow( settings.getWidth(), settings.getHeight(),
+                    settings.getDepth(), settings.getFrequency(), settings.isFullscreen());
+
             logger.info("Running on: " + display.getAdapter()
                     + "\nDriver version: " + display.getDriverVersion() + "\n"
                     + display.getDisplayVendor() + " - "
                     + display.getDisplayRenderer() + " - "
                     + display.getDisplayAPIVersion());
-            
-            
+
+
             /**
              * Create a camera specific to the DisplaySystem that works with the
              * display's width and height
@@ -382,7 +386,7 @@ public abstract class AcubeGame extends BaseGame {
         /*FirstPersonHandler firstPersonHandler = new FirstPersonHandler( cam, 5,
                 0.3f );
         input = firstPersonHandler;*/
-        
+
         MouseLookHandler mouseLookHandler = new MouseLookHandler(cam, 0.3f);
         input = mouseLookHandler;
 
@@ -397,7 +401,9 @@ public abstract class AcubeGame extends BaseGame {
          * Signal to the renderer that it should keep track of rendering
          * information.
          */
-        display.getRenderer().enableStatistics( true );
+
+        // TODO DJT
+        //display.getRenderer().enableStatistics( true );
 
         /** Assign key P to action "toggle_pause". */
         KeyBindingManager.getKeyBindingManager().set( "toggle_pause",
@@ -470,21 +476,25 @@ public abstract class AcubeGame extends BaseGame {
          */
         ZBufferState buf = display.getRenderer().createZBufferState();
         buf.setEnabled( true );
-        buf.setFunction( ZBufferState.CF_LEQUAL );
+        buf.setFunction( ZBufferState.TestFunction.LessThanOrEqualTo);
         rootNode.setRenderState( buf );
 
         // Then our font Text object.
         /** This is what will actually have the text at the bottom. */
         fps = Text.createDefaultTextLabel( "FPS label" );
-        fps.setCullMode( SceneElement.CULL_NEVER );
-        fps.setTextureCombineMode( TextureState.REPLACE );
+        fps.setCullHint(Spatial.CullHint.Never);
+        fps.setTextureCombineMode( Spatial.TextureCombineMode.Replace);
 
         // Finally, a stand alone node (not attached to root on purpose)
         fpsNode = new Node( "FPS node" );
+
+        /*
+        DJT
         fpsNode.setRenderState( fps.getRenderState( RenderState.RS_ALPHA ) );
         fpsNode.setRenderState( fps.getRenderState( RenderState.RS_TEXTURE ) );
+         */
         fpsNode.attachChild( fps );
-        fpsNode.setCullMode( SceneElement.CULL_NEVER );
+        fpsNode.setCullHint(Spatial.CullHint.Never);
 
         // ---- LIGHTS
         /** Set up a basic, default light. */
@@ -570,6 +580,6 @@ public abstract class AcubeGame extends BaseGame {
         super.quit();
         System.exit( 0 );
     }
-    
-    
+
+
 }

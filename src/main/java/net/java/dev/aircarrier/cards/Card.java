@@ -3,13 +3,13 @@ package net.java.dev.aircarrier.cards;
 public class Card implements Comparable<Card>{
 
 	private static Suit[] SUIT_ORDER = new Suit[]{Suit.SPADES, Suit.HEARTS, Suit.DIAMONDS, Suit.CLUBS};
-	
+
 	private int index;
 	private Value value;
 	private Suit suit;
 	private Colour colour;
 	private Integer indexInteger;
-	
+
 	public Card(int index) {
 		if (index < 0 || index>= 52) {
 			throw new IllegalArgumentException("Card index must be from 0 to 51");
@@ -63,5 +63,5 @@ public class Card implements Comparable<Card>{
 	public int compareTo(Card o) {
 		return indexInteger.compareTo(o.getIndex());
 	}
-	
+
 }

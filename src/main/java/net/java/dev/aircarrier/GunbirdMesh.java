@@ -27,10 +27,7 @@ import java.io.IOException;
 
 import net.java.dev.aircarrier.model.XMLparser.JmeBinaryReader;
 
-import jmetest.renderer.TestEnvMap;
-
 import com.jme.app.SimpleGame;
-import com.jme.app.VariableTimestepGame;
 import com.jme.image.Texture;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
@@ -43,9 +40,9 @@ import com.jme.util.TextureManager;
 
 /**
  * <code>TestAutoClodMesh</code> shows off the use of the AreaClodMesh in jME.
- * 
+ *
  * keys: L Toggle lights T Toggle Wireframe mode M Toggle Model or Disc
- * 
+ *
  * @author Joshua Slack
  * @version $Id: GunbirdMesh.java,v 1.6 2007/08/19 10:34:14 shingoki Exp $
  */
@@ -56,12 +53,12 @@ public class GunbirdMesh extends SimpleGame {
 
 	/**
 	 * Entry point for the test,
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		GunbirdMesh app = new GunbirdMesh();
-		app.setDialogBehaviour(VariableTimestepGame.ALWAYS_SHOW_PROPS_DIALOG);
+		app.setConfigShowMode(ConfigShowMode.AlwaysShow);
 		app.start();
 	}
 
@@ -79,7 +76,7 @@ public class GunbirdMesh extends SimpleGame {
 
 	/**
 	 * builds the trimesh.
-	 * 
+	 *
 	 * @see com.jme.app.SimpleGame#initGame()
 	 */
 	protected void simpleInitGame() {
@@ -100,9 +97,9 @@ public class GunbirdMesh extends SimpleGame {
         // Attach the light to a lightState and the lightState to rootNode.
         lightState.attach(light2);
         */
-		
+
         rootNode.setRenderState(lightState);
-		
+
 		try {
 			JmeBinaryReader jbr = new JmeBinaryReader();
 			model = jbr.loadBinaryFormat(GunbirdMesh.class.getClassLoader()
@@ -123,14 +120,14 @@ public class GunbirdMesh extends SimpleGame {
 
 		Texture texture = TextureManager.loadTexture(GunbirdMesh.class
 				.getClassLoader().getResource("resources/airMine.png"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
 
-		Texture envTexture = TextureManager.loadTexture(TestEnvMap.class
+		Texture envTexture = TextureManager.loadTexture(GunbirdMesh.class
 				.getClassLoader()
 				.getResource("resources/sky_env_darker.jpg"),
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-		envTexture.setEnvironmentalMapMode(Texture.EM_SPHERE);
-		envTexture.setApply(Texture.AM_ADD);
+                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+		envTexture.setEnvironmentalMapMode(Texture.EnvironmentalMapMode.SphereMap);
+		envTexture.setApply(Texture.ApplyMode.Add);
 
 		for (Object o : model.getChildren()) {
 			System.out.println(o);
@@ -144,7 +141,7 @@ public class GunbirdMesh extends SimpleGame {
 							.createTextureState();
 				}
 
-				
+
 				// Initialize the texture state
 				/*
 				if (n.getName().startsWith("b_")) {
@@ -161,9 +158,9 @@ public class GunbirdMesh extends SimpleGame {
 						|| 	n.getName().indexOf("canopy") > -1
 						|| 	n.getName().indexOf("gun") > -1
 				) {*/
-				      ts.setTexture( envTexture, 1 );					
+				      ts.setTexture( envTexture, 1 );
 				}
-				
+
 				ts.setEnabled(true);
 
 				// Set the texture to the quad
@@ -177,7 +174,7 @@ public class GunbirdMesh extends SimpleGame {
 		/*
 		 * Spatial child = model.getChild(0); while(child instanceof Node) {
 		 * child = ((Node)child).getChild(0); }
-		 * 
+		 *
 		 * iNode2 = new AreaClodMesh("model", (TriMesh)child, null);
 		 * rootNode.attachChild(iNode2); iNode2.setDistanceTolerance( 0.0f);
 		 * iNode2.setCullMode(Spatial.CULL_DYNAMIC); iNode2.setModelBound(new

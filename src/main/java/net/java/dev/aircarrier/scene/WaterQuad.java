@@ -33,18 +33,19 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.TexCoords;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 
 /**
  * Create a Quad with shaders to produce a reflect/refract water surface
- * 
+ *
  * @author shingoki
- * 
+ *
  */
 public class WaterQuad extends Quad {
 	private static final long serialVersionUID = 6251499689925767412L;
-	
+
 	private GLSLShaderObjectsState so;
 
 	/**
@@ -65,7 +66,7 @@ public class WaterQuad extends Quad {
 	public WaterQuad(String name, Texture reflectTex, Texture refractTex) {
 		this(name, 1, 1, reflectTex, refractTex);
 	}
-	
+
 	/**
 	 * Create a water quad
 	 * @param name
@@ -92,13 +93,13 @@ public class WaterQuad extends Quad {
 
 		// Check is GLSL is supported on current hardware.
 		if (!so.isSupported()) {
-			
+
 			//Not supported, we should deal with this by falling back to a plain texture
 			//FIXME fallback
 			return;
 		}
 
-		so.load(WaterQuad.class.getClassLoader().getResource("resources/gokiwater.vert"), 
+		so.load(WaterQuad.class.getClassLoader().getResource("resources/gokiwater.vert"),
 				WaterQuad.class.getClassLoader().getResource("resources/gokiwater.frag"));
 
 		// Set the variable "reflection" to correspond to the first texture unit
@@ -138,7 +139,7 @@ public class WaterQuad extends Quad {
 		tbuf.put(10).put(0);
 		tbuf.put(10).put(10);
 		//TODO check geom batch 0 is correct
-		setTextureBuffer(0, tbuf);
+		setTextureCoords(new TexCoords(tbuf, 2), 0);
 
 		TextureState ts = (TextureState)getRenderState(RenderState.RS_TEXTURE);
 		if (ts == null) {
@@ -147,9 +148,9 @@ public class WaterQuad extends Quad {
 		}
 
 		Texture dudv = TextureLoader.loadTexture("resources/dudvmap.bmp");
-		dudv.setWrap(Texture.WM_WRAP_S_WRAP_T);
+        dudv.setWrap(Texture.WrapMode.Repeat);
 		Texture normal = TextureLoader.loadTexture("resources/normalmap.bmp");
-		normal.setWrap(Texture.WM_WRAP_S_WRAP_T);
+        normal.setWrap(Texture.WrapMode.Repeat);
 
 		// Turn on the first texture unit and bind the REFLECTION texture
 		ts.setTexture(reflectTex, 0);
@@ -172,16 +173,16 @@ public class WaterQuad extends Quad {
 		setRenderState(ts);
 
 		//TODO check geom batch 0 is correct
-		copyTextureCoords(0, 0, 1);
-		copyTextureCoords(0, 0, 2);
-		copyTextureCoords(0, 0, 3);
-		copyTextureCoords(0, 0, 4);
+		copyTextureCoordinates(0, 1, 1f);
+		copyTextureCoordinates(0, 2, 1f);
+		copyTextureCoordinates(0, 3, 1f);
+		copyTextureCoordinates(0, 4, 1f);
 	}
 
     public void updateCameraShaderPosition(Vector3f cameraPos) {
-    	so.setUniform("cameraPos", cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);     	
+    	so.setUniform("cameraPos", cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
     }
-    
+
     public void updateLightPosition(Vector3f lightPos) {
 		so.setUniform("lightPos", lightPos.x, lightPos.y, lightPos.z, 1.0f);
     }

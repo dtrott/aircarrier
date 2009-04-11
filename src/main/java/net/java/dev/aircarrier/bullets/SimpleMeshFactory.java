@@ -39,7 +39,7 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
@@ -55,23 +55,23 @@ import com.jme.util.TextureManager;
 public class SimpleMeshFactory {
 
 	private static Logger logger = Logger.getLogger(SimpleMeshFactory.class.toString());
-	
+
 	List<TriMesh> meshPool = new ArrayList<TriMesh>(100);
 
 	int chunkSize = 100;
-	
+
 	List<RenderState> renderStates;
-	
+
 	int meshIndex = 0;
-	
+
 	String modelResourceName;
-	
+
 	int renderQueueMode;
-	
+
 	Vector3f offset;
-	
+
 	float scale;
-	
+
 	/**
 	 * Return a factory for bullets
 	 */
@@ -104,12 +104,12 @@ public class SimpleMeshFactory {
 	 * Return a factory for glowing meshes (e.g. bullets, flashes)
 	 */
 	public static SimpleMeshFactory makeGlowMeshFactory(
-			String modelResourceName, 
+			String modelResourceName,
 			String textureResourceName,
 			Vector3f offset,
 			float scale) throws IOException {
 
-		AlphaState alphaState;
+		BlendState blendState;
 		Texture texture;
 		TextureState textureState;
 		LightState noLight;
@@ -118,29 +118,29 @@ public class SimpleMeshFactory {
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
 
 		//Alpha state for all bullets adds the texture to anything behind it
-		
-		alphaState = display.getRenderer().createAlphaState();
-		alphaState.setBlendEnabled( true );
-		alphaState.setSrcFunction( AlphaState.SB_SRC_ALPHA );
-		alphaState.setDstFunction( AlphaState.DB_ONE );
-		alphaState.setTestEnabled(true);
-		alphaState.setEnabled( true );
-		
+
+		blendState = display.getRenderer().createBlendState();
+		blendState.setBlendEnabled( true );
+		blendState.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+		blendState.setDestinationFunction(BlendState.DestinationFunction.One);
+		blendState.setTestEnabled(true);
+		blendState.setEnabled( true );
+
 		/*
-		alphaState = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
-		alphaState.setBlendEnabled(true);
-		//alphaState.setSrcFunction(AlphaState.SB_ZERO);
-		//alphaState.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_COLOR);
-		alphaState.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-		alphaState.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);			
-		alphaState.setTestEnabled(true);
-		alphaState.setEnabled(true);
+		BlendState = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
+		BlendState.setBlendEnabled(true);
+		//BlendState.setSourceFunction(BlendState.SB_ZERO);
+		//BlendState.setDestinationFunction(BlendState.DB_ONE_MINUS_SRC_COLOR);
+		BlendState.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+		BlendState.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
+		BlendState.setTestEnabled(true);
+		BlendState.setEnabled(true);
 		*/
-		
+
 		//Texture has an elongated tracer blur
-		texture = TextureManager.loadTexture(SimpleMeshFactory.class
+        texture = TextureManager.loadTexture(SimpleMeshFactory.class
 				.getClassLoader().getResource(textureResourceName),
-				Texture.MM_NONE, Texture.FM_LINEAR);
+                Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear);
 
 		//Texture state for all bullets
 		textureState = display.getRenderer().createTextureState();
@@ -157,28 +157,28 @@ public class SimpleMeshFactory {
         //render queue is used, this should work out).
         zBufferState = display.getRenderer().createZBufferState();
         zBufferState.setEnabled(true);
-        zBufferState.setFunction(ZBufferState.CF_LEQUAL);
+        zBufferState.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
         zBufferState.setWritable(false);
-        
+
         List<RenderState> renderStates = new ArrayList<RenderState>();
-        renderStates.add(alphaState);
+        renderStates.add(blendState);
         renderStates.add(textureState);
         renderStates.add(noLight);
         renderStates.add(zBufferState);
-        
+
         return new SimpleMeshFactory(modelResourceName, renderStates, Renderer.QUEUE_TRANSPARENT, offset, scale);
 	}
-	
+
 	/**
 	 * Return a factory for glowing meshes (e.g. bullets, flashes)
 	 */
 	public static SimpleMeshFactory makeAlphaMeshFactory(
-			String modelResourceName, 
+			String modelResourceName,
 			String textureResourceName,
 			Vector3f offset,
 			float scale) throws IOException {
 
-		AlphaState alphaState;
+		BlendState blendState;
 		Texture texture;
 		TextureState textureState;
 		LightState noLight;
@@ -187,29 +187,29 @@ public class SimpleMeshFactory {
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
 
 		//Alpha state for all bullets adds the texture to anything behind it
-		
-		alphaState = display.getRenderer().createAlphaState();
-		alphaState.setBlendEnabled( true );
-		alphaState.setSrcFunction( AlphaState.SB_SRC_ALPHA );
-		alphaState.setDstFunction( AlphaState.DB_ONE_MINUS_SRC_ALPHA );
-		alphaState.setTestEnabled(true);
-		alphaState.setEnabled( true );
-		
+
+		blendState = display.getRenderer().createBlendState();
+		blendState.setBlendEnabled( true );
+		blendState.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+		blendState.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
+		blendState.setTestEnabled(true);
+		blendState.setEnabled( true );
+
 		/*
-		alphaState = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
-		alphaState.setBlendEnabled(true);
-		//alphaState.setSrcFunction(AlphaState.SB_ZERO);
-		//alphaState.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_COLOR);
-		alphaState.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-		alphaState.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);			
-		alphaState.setTestEnabled(true);
-		alphaState.setEnabled(true);
+		BlendState = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
+		BlendState.setBlendEnabled(true);
+		//BlendState.setSourceFunction(BlendState.SB_ZERO);
+		//BlendState.setDestinationFunction(BlendState.DB_ONE_MINUS_SRC_COLOR);
+		BlendState.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+		BlendState.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
+		BlendState.setTestEnabled(true);
+		BlendState.setEnabled(true);
 		*/
-		
+
 		//Texture has an elongated tracer blur
 		texture = TextureManager.loadTexture(SimpleMeshFactory.class
 				.getClassLoader().getResource(textureResourceName),
-				Texture.MM_NONE, Texture.FM_LINEAR);
+                Texture.MinificationFilter.BilinearNoMipMaps, Texture.MagnificationFilter.Bilinear);
 
 		//Texture state for all bullets
 		textureState = display.getRenderer().createTextureState();
@@ -226,22 +226,22 @@ public class SimpleMeshFactory {
         //render queue is used, this should work out).
         zBufferState = display.getRenderer().createZBufferState();
         zBufferState.setEnabled(true);
-        zBufferState.setFunction(ZBufferState.CF_LEQUAL);
+        zBufferState.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
         zBufferState.setWritable(false);
-        
+
         List<RenderState> renderStates = new ArrayList<RenderState>();
-        renderStates.add(alphaState);
+        renderStates.add(blendState);
         renderStates.add(textureState);
         renderStates.add(noLight);
         renderStates.add(zBufferState);
-        
+
         return new SimpleMeshFactory(modelResourceName, renderStates, Renderer.QUEUE_TRANSPARENT, offset, scale);
 	}
-	
-	
+
+
 	/**
-	 * Create a plain bullet node factory 
-	 * @throws IOException 
+	 * Create a plain bullet node factory
+	 * @throws IOException
 	 * 		If model cannot be loaded
 	 */
 	public SimpleMeshFactory(
@@ -250,7 +250,7 @@ public class SimpleMeshFactory {
 			int renderQueueMode,
 			Vector3f offset,
 			float scale) throws IOException {
-		
+
 		this.modelResourceName = modelResourceName;
 		this.renderStates = renderStates;
 		this.renderQueueMode = renderQueueMode;
@@ -272,15 +272,15 @@ public class SimpleMeshFactory {
 				return null;
 			}
 		}
-		
+
 		return meshPool.remove(0);
 
 	}
 
-	
+
 	/**
 	 * Add chunkSize meshes to the pool
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void addMeshes() throws IOException {
 
@@ -290,7 +290,7 @@ public class SimpleMeshFactory {
 		Node model = jbr.loadBinaryFormat(SimpleMeshFactory.class.getClassLoader()
 				.getResourceAsStream(modelResourceName));
 		model.updateGeometricState(0, true);
-		
+
 		//Extract the model's first trimesh child, going down two layers
 		TriMesh triMesh = null;
 		for (Spatial spatial : model.getChildren()) {
@@ -305,23 +305,23 @@ public class SimpleMeshFactory {
 				}
 			}
 		}
-		
+
 		if (triMesh == null) {
 			throw new IOException("No TriMesh found in model file (in first two layers of nesting)");
 		}
-		
+
 		triMesh.setLocalRotation(new Quaternion(new float[]{0f, (float)(Math.PI/2), 0f}));
 		triMesh.getLocalTranslation().set(offset);
 		triMesh.setLocalScale(scale);
-		
+
 		triMesh.setVBOInfo(new VBOInfo(true));
-		
+
 		//Make lots of sharedmeshes
 		for (int i = 0; i < chunkSize; i++) {
 			//Make a shared mesh from the triMesh
 			SharedMesh sm = new SharedMesh("Shared Mesh " + meshIndex, triMesh);
 			meshIndex++;
-	
+
 			//Set and update render states
 			for (RenderState rs : renderStates) {
 				sm.setRenderState(rs);
@@ -334,5 +334,5 @@ public class SimpleMeshFactory {
 			meshPool.add(sm);
 		}
 	}
-	
+
 }

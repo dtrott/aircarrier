@@ -33,7 +33,7 @@ public abstract class CarrierSimpleGame extends BaseSimpleGame {
 
     /**
      * Called every frame to update scene information.
-     * 
+     *
      * @param interpolation
      *            unused in this implementation
      * @see BaseSimpleGame#update(float interpolation)
@@ -52,28 +52,28 @@ public abstract class CarrierSimpleGame extends BaseSimpleGame {
 
     /**
      * This is called every frame in BaseGame.start(), after update()
-     * 
+     *
      * @param interpolation
      *            unused in this implementation
-     * @see AbstractGame#render(float interpolation)
      */
     protected final void render(float interpolation) {
         super.render(interpolation);
-        
+
         Renderer r = display.getRenderer();
 
         /** Draw the rootNode and all its children. */
         r.draw(rootNode);
-        
+
         /** Call simpleRender() in any derived classes. */
         simpleRender();
-        
+
         /** Draw the fps node to show the fancy information at the bottom. */
-        r.draw(fpsNode);
-        
+        // DJT TODO
+        //r.draw(fpsNode);
+
         if (showDepth) {
             r.renderQueue();
-            Debugger.drawBuffer(Texture.RTT_SOURCE_DEPTH, Debugger.NORTHEAST, r);
+            Debugger.drawBuffer(Texture.RenderToTextureType.Depth, Debugger.NORTHEAST, r);
         }
     }
 }

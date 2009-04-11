@@ -40,7 +40,7 @@ import com.jme.system.DisplaySystem;
 
 /**
  * A gun. Can fire bullets at a certain interval,
- * taken from a certain source, allowing for an ammo count. 
+ * taken from a certain source, allowing for an ammo count.
  * @author shingoki
  *
  */
@@ -50,39 +50,39 @@ public class Gun extends Node {
 	float fireDelay = 0;
 	float fireInterval = 1f;
 	int ammoCount = -1;
-	
+
 	ReusableSource<Bullet> bulletSource;
 	Node bulletNode;
-	
+
 	Node muzzleFlash;
 	CullState muzzleCull;
-	
+
 	float muzzleRampTime = 0.01f;
 	float muzzleDecayTime = 0.07f;
 	float muzzleMaxSize = 3f;
 	float muzzleTime = -1f;
-	
+
 	float maxLight = 0.5f;
-	
+
 	Light light;
-	
+
 	List<FireListener> listeners = new ArrayList<FireListener>();
-	
+
 	public Gun(String name, ReusableSource<Bullet> bulletSource, Node bulletNode) throws IOException {
 		super(name);
 		this.bulletSource = bulletSource;
 		this.bulletNode = bulletNode;
-		
+
 		muzzleFlash = MuzzleFlash.createMuzzleFlash();
 		muzzleCull = DisplaySystem.getDisplaySystem().getRenderer().createCullState();
-		muzzleCull.setCullMode(CULL_ALWAYS);
+		muzzleCull.setCullFace(CullState.Face.FrontAndBack);
 		muzzleCull.setEnabled(true);
 		muzzleFlash.setRenderState(muzzleCull);
 		muzzleFlash.updateRenderState();
 		muzzleFlash.setLocalScale(0f);
 		attachChild(muzzleFlash);
 		updateGeometricState(0, true);
-		
+
 		light = new PointLight();
 		light.setDiffuse(new ColorRGBA(0f, 0f, 0f, 1.0f));
 		light.setSpecular(new ColorRGBA(0f, 0f, 0f, 1.0f));
@@ -91,7 +91,7 @@ public class Gun extends Node {
 		light.setQuadratic(0f);
 		light.setConstant(0f);
 		light.setEnabled(false);
-		
+
 	}
 
 	/**
@@ -105,19 +105,19 @@ public class Gun extends Node {
 		if (!readyToFire() || !hasAmmo() ) {
 			return null;
 		}
-		
+
 		Bullet b = bulletSource.get();
 		b.fire(this);
-		
+
 		fireDelay = fireInterval;
 		expendAmmo();
-		
+
 
 		muzzleTime = 0f;
 		muzzleCull.setEnabled(false);
-		
+
 		fireFireEvent();
-		
+
 		return b;
 	}
 
@@ -134,28 +134,28 @@ public class Gun extends Node {
 			listener.fired(this);
 		}
 	}
-	
+
 	public void update(float time) {
-		
+
 		//If muzzle flash is in progress
 		if (muzzleTime >= 0f) {
 			//Move flash along
 			muzzleTime += time;
 			//Work out size
 			float size = 0f;
-			
+
 			//We are still increasing size, so interpolate to max size
 			if (muzzleTime < muzzleRampTime) {
 				size = (muzzleTime / muzzleRampTime) * muzzleMaxSize;
-				
+
 			//We are past the ramp
 			} else {
-				
+
 				//Work out where we are in decay
 				float decayTime = muzzleTime - muzzleRampTime;
 				if (decayTime < muzzleDecayTime) {
 					size = ((muzzleDecayTime-decayTime) / muzzleDecayTime) * muzzleMaxSize;
-					
+
 				//We have finished flash completely, so hide it
 				//and set time to -1 so we will ignore on update
 				} else {
@@ -166,7 +166,7 @@ public class Gun extends Node {
 			}
 			//Set size appropriately
 			muzzleFlash.setLocalScale(size < 0 ? 0 : size);
-			
+
 			//Set light appropriately
 			if (size > 0) {
 				light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 0.7f, 1.0f));
@@ -181,15 +181,15 @@ public class Gun extends Node {
 			}
 
 		}
-		
+
 		//Update delay/interval
 		if (fireDelay > -1) {
 			fireDelay -= time;
 		}
 
-		
+
 	}
-	
+
 	public Light getLight() {
 		return light;
 	}
@@ -197,15 +197,15 @@ public class Gun extends Node {
 	public boolean readyToFire() {
 		return (fireDelay <= 0);
 	}
-	
+
 	private void expendAmmo() {
 		if (ammoCount > 0) ammoCount--;
 	}
-	
+
 	public boolean hasAmmo() {
 		return (ammoCount != 0);
 	}
-	
+
 	public int getAmmoCount() {
 		return ammoCount;
 	}
@@ -229,5 +229,5 @@ public class Gun extends Node {
 	public void setFireInterval(float fireInterval) {
 		this.fireInterval = fireInterval;
 	}
-	
+
 }

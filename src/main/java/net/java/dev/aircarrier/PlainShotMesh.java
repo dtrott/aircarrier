@@ -36,9 +36,9 @@ import com.jme.math.Vector3f;
 
 /**
  * <code>TestAutoClodMesh</code> shows off the use of the AreaClodMesh in jME.
- * 
+ *
  * keys: L Toggle lights T Toggle Wireframe mode M Toggle Model or Disc
- * 
+ *
  * @author Joshua Slack
  * @version $Id: PlainShotMesh.java,v 1.6 2007/02/14 20:09:22 shingoki Exp $
  */
@@ -47,13 +47,13 @@ public class PlainShotMesh extends SimpleGame {
 
 	/**
 	 * Entry point for the test,
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		PlainShotMesh app = new PlainShotMesh();
-		app.setDialogBehaviour(VariableTimestepGame.ALWAYS_SHOW_PROPS_DIALOG);
-		app.start();
+        app.setConfigShowMode(ConfigShowMode.AlwaysShow);
+        app.start();
 	}
 
 	protected void simpleUpdate() {
@@ -61,7 +61,7 @@ public class PlainShotMesh extends SimpleGame {
 
 	/**
 	 * builds the trimesh.
-	 * 
+	 *
 	 * @see com.jme.app.SimpleGame#initGame()
 	 */
 	protected void simpleInitGame() {
@@ -69,29 +69,29 @@ public class PlainShotMesh extends SimpleGame {
 		display.setTitle("Test shot model");
 		cam.setLocation(new Vector3f(0.0f, 0.0f, 25.0f));
 		cam.update();
-		
+
 
 
 		//ColorRGBA skyColor = new ColorRGBA(0.7f, 0.8f, 1f, 0.5f);
 		//display.getRenderer().setBackgroundColor(skyColor);
-		
+
 		try {
 			SimpleMeshFactory meshFactory = SimpleMeshFactory.makeBulletMeshFactory();
-			
+
 			ReusableSource<Bullet> bulletSource = new BulletPool(rootNode, meshFactory);
-			
+
 			Bullet shot;
-			
+
 			for (int i = 0; i < 100; i++) {
-				shot = bulletSource.get();			
+				shot = bulletSource.get();
 				rootNode.attachChild(shot);
 				shot.getLocalTranslation().set(
-						(float)Math.random(), 
+						(float)Math.random(),
 						(float)Math.random(),
 						(float)Math.random());
 				//shot.getNode().getLocalScale().set(2,1,1);
 			}
-			
+
 			rootNode.updateRenderState();
 			rootNode.updateWorldData(0);
 			rootNode.updateGeometricState(0, true);
@@ -99,12 +99,12 @@ public class PlainShotMesh extends SimpleGame {
 			//rootNode.updateCollisionTree();
 			rootNode.updateWorldBound();
 			rootNode.updateWorldVectors();
-			
+
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 
 	}
 }
