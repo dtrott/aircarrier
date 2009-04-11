@@ -1,0 +1,53 @@
+void main (float4 inPosition : POSITION,
+           float2 inTexcoord : TEXCOORD0,
+           float3 inNormal   : NORMAL,
+
+       out float4 outPosition      : POSITION,
+       out float  reflectionFactor : COLOR,
+       out float3 R                : TEXCOORD0,
+       out float3 TRed             : TEXCOORD1,
+       out float3 TGreen           : TEXCOORD2,
+       out float3 TBlue            : TEXCOORD3,
+       out float2 outTexcoord      : TEXCOORD4,
+       out float3 lightDirection   : TEXCOORD5,
+
+   uniform float time,
+   uniform float fresnelBias,
+   uniform float fresnelScale,
+   uniform float fresnelPower,
+   uniform float3 etaRatio,
+   uniform float3 eyePositionW,
+   uniform float3 lightPosition,
+   uniform float4x4 modelViewProj,
+   uniform float4x4 modelToWorld)
+{
+/* REMOVE THIS FOR ANOTHER VERSION OF WAVE GENERATION
+  float scale = 300, x_scale = 0.075, z_scale = 0.025;
+
+  inPosition.y += x_scale * sin (inPosition.x + (time / scale));
+  inPosition.y += z_scale * cos (inPosition.z + (time / scale));
+*/
+  outPosition = mul (modelViewProj, inPosition);
+
+  float scale = 300, x_scale = 0.075, z_scale = 0.025;
+
+  outPosition.y += x_scale * sin (outPosition.x + (time / scale));
+  outPosition.y += z_scale * cos (outPosition.z + (time / scale));
+
+  outTexcoord = inTexcoord;
+
+  lightPosition = mul (modelViewProj, float4 (lightPosition, 1));
+  lightDirection = lightPosition - inPosition.xyz;
+
+  float3 positionW = mul (modelToWorld, inPosition).xyz;
+  float3 N = mul ((float3x3) modelToWorld, inNormal);
+  N = normalize (N);
+
+  float3 I = positionW - eyePositionW;
+  R = reflect (I, N);
+  TRed = refract (I, N, etaRatio.x);
+  TGreen = refract (I, N, etaRatio.y);
+  TBlue = refract (I, N, etaRatio.z);
+
+  reflectionFactor = fresnelBias + fresnelScale * pow (1 + dot (I, N), fresnelPower);
+}

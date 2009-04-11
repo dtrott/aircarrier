@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<scene>
+        <node name="Plane.001" translation="0 0 0" rotation="0 0 0.7071068 0.7071068" scale="1 1 1">
+            <mesh name="Plane.nocull">
+                <vertex data="-0.09 0 0.3200001  0.0899996 0 0.3200002  0.0900002 0 -0.3199999  -0.09 0 -0.3199999  "/>
+                <normal data="0 1 0  0 1 0  0 1 0  0 1 0  "/>
+                <texturecoords data="0 0.890625  0 0.609375  1 0.609375  1 0.890625  "/>
+                <index data="0 1 2 2 3 0"/>
+                <materialstate diffuse="0.8 0.8 0.8 1" ambient="0 0 0 1" emissive="0 0 0 1" specular="0.25 0.25 0.25 1" shiny="12.5244618" alpha="1"/>
+            </mesh>
+        </node>
+        <node name="Plane.003" translation="0 0 0" rotation="0.6532815 -0.6532815 0.2705981 0.2705981" scale="1 1 1">
+            <mesh name="Plane.nocull">
+                <vertex data="-0.09 0 0.3200001  0.0899996 0 0.3200002  0.0900002 0 -0.3199999  -0.09 0 -0.3199999  "/>
+                <normal data="0 1 0  0 1 0  0 1 0  0 1 0  "/>
+                <texturecoords data="0 0.890625  0 0.609375  1 0.609375  1 0.890625  "/>
+                <index data="0 1 2 2 3 0"/>
+                <materialstate diffuse="0.8 0.8 0.8 1" ambient="0 0 0 1" emissive="0 0 0 1" specular="0.25 0.25 0.25 1" shiny="12.5244618" alpha="1"/>
+            </mesh>
+        </node>
+        <node name="Plane.002" translation="0 0 0" rotation="0.270598 -0.2705981 0.6532815 0.6532815" scale="1 1 1">
+            <mesh name="Plane.nocull">
+                <vertex data="-0.09 0 0.3200001  0.0899996 0 0.3200002  0.0900002 0 -0.3199999  -0.09 0 -0.3199999  "/>
+                <normal data="0 1 0  0 1 0  0 1 0  0 1 0  "/>
+                <texturecoords data="0 0.890625  0 0.609375  1 0.609375  1 0.890625  "/>
+                <index data="0 1 2 2 3 0"/>
+                <materialstate diffuse="0.8 0.8 0.8 1" ambient="0 0 0 1" emissive="0 0 0 1" specular="0.25 0.25 0.25 1" shiny="12.5244618" alpha="1"/>
+            </mesh>
+        </node>
+        <node name="Plane" translation="0 0 0" rotation="0.5 -0.5 0.5 0.5000001" scale="1 1 1">
+            <mesh name="Plane.nocull">
+                <vertex data="-0.09 0 0.3200001  0.0899996 0 0.3200002  0.0900002 0 -0.3199999  -0.09 0 -0.3199999  "/>
+                <normal data="0 1 0  0 1 0  0 1 0  0 1 0  "/>
+                <texturecoords data="0 0.890625  0 0.609375  1 0.609375  1 0.890625  "/>
+                <index data="0 1 2 2 3 0"/>
+                <materialstate diffuse="0.8 0.8 0.8 1" ambient="0 0 0 1" emissive="0 0 0 1" specular="0.25 0.25 0.25 1" shiny="12.5244618" alpha="1"/>
+            </mesh>
+        </node>
+</scene>

@@ -1,0 +1,98 @@
+
+=================== FREESOUND ATTRIBUTION FORM =======================
+
+This form below lists all the samples in this pack with their descriptions and tags.
+You can use this form to attribute samples to users when you use them.
+
+=========================== CUT HERE =================================
+
+File:
+	Name: "generic prop_end(4.474).wav"
+	Url: http://freesound.iua.upf.edu/samplesViewSingle.php?id=12810
+	Date of upload: 2005-12-12 12:54:36
+	
+Designer / Creator / Uploader:
+	Name: "JillianCallahan"
+	Url: http://freesound.iua.upf.edu/usersViewSingle.php?id=25966
+	
+Description:
+
+Tags:
+	airplane engine propeller stop 
+======================================================================
+
+File:
+	Name: "generic prop_high.wav"
+	Url: http://freesound.iua.upf.edu/samplesViewSingle.php?id=12811
+	Date of upload: 2005-12-12 12:54:50
+	
+Designer / Creator / Uploader:
+	Name: "JillianCallahan"
+	Url: http://freesound.iua.upf.edu/usersViewSingle.php?id=25966
+	
+Description:
+
+Tags:
+	airplane eninge loud propeler straining 
+======================================================================
+
+File:
+	Name: "generic prop_idle.wav"
+	Url: http://freesound.iua.upf.edu/samplesViewSingle.php?id=12812
+	Date of upload: 2005-12-12 12:54:57
+	
+Designer / Creator / Uploader:
+	Name: "JillianCallahan"
+	Url: http://freesound.iua.upf.edu/usersViewSingle.php?id=25966
+	
+Description:
+
+Tags:
+	airplane engine idle propeler 
+======================================================================
+
+File:
+	Name: "generic prop_low.wav"
+	Url: http://freesound.iua.upf.edu/samplesViewSingle.php?id=12813
+	Date of upload: 2005-12-12 12:54:58
+	
+Designer / Creator / Uploader:
+	Name: "JillianCallahan"
+	Url: http://freesound.iua.upf.edu/usersViewSingle.php?id=25966
+	
+Description:
+
+Tags:
+	airplane low propeller 
+======================================================================
+
+File:
+	Name: "generic prop_mid.wav"
+	Url: http://freesound.iua.upf.edu/samplesViewSingle.php?id=12814
+	Date of upload: 2005-12-12 12:55:00
+	
+Designer / Creator / Uploader:
+	Name: "JillianCallahan"
+	Url: http://freesound.iua.upf.edu/usersViewSingle.php?id=25966
+	
+Description:
+
+Tags:
+	airplane medium propeller 
+======================================================================
+
+File:
+	Name: "generic prop_start(8.395).wav"
+	Url: http://freesound.iua.upf.edu/samplesViewSingle.php?id=12815
+	Date of upload: 2005-12-12 12:55:01
+	
+Designer / Creator / Uploader:
+	Name: "JillianCallahan"
+	Url: http://freesound.iua.upf.edu/usersViewSingle.php?id=25966
+	
+Description:
+
+Tags:
+	airplane engine propeller start 
+======================================================================
+

@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-GB">
+
+<!--
+
+Graphics, text Shingoki. Template as below (thanks!) :
+ ____________________________________________________________
+|                                                            |
+|    DESIGN + Pat Heard { http://fullahead.org }             |
+|      DATE + 2005.08.26                                     |
+| COPYRIGHT + free use if this notice is kept in place       |
+|____________________________________________________________|
+
+-->
+
+<head>
+
+
+  <title>Air Carrier</title>
+
+  <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+  <meta name="author" content="aircarrier.dev.java.net" />
+  <meta name="keywords" content="aircarrier, jmonkeyengine, dogfight, game, java, blender" />
+  <meta name="description" content="The Air Carrier website." />
+  <meta name="robots" content="index, follow" />
+
+  <link rel="stylesheet" type="text/css" href="css/screen.css" media="screen, print" />
+
+</head>
+
+
+<body>
+
+<div id="siteBox">
+
+  <div id="header">
+    <h1 class="actitle">Air Carrier</h1>
+
+    <!-- Opera bug fix -->
+    &nbsp;
+  </div>
+
+  <div id="menu">
+    <a href="main.html" title="Main" class="active">Main</a>
+    <a href="install.html" title="Install" class="active">Install</a>
+  </div>
+
+  <div id="content">
+
+    <div id="news">
+
+      <div class="block">
+
+        <h1>
+          Links
+        </h1>
+        <p>
+          Air Carrier is in development. For now, you can get the code and resources from dev.java.net, using these <a href="install.html" title="Install Instructions">instructions</a>
+        </p>
+
+        <div class="links">
+          <a href="https://aircarrier.dev.java.net/" title="Aircarrier Project page">Project Page</a>
+          <a href="https://aircarrier.dev.java.net/source/browse/aircarrier/" title="CVS">CVS (Code)</a>
+          <a href="https://aircarrier.dev.java.net/servlets/ProjectForumView" title="Forums">Forums</a>
+        </div>
+
+        <div class="bottom">&nbsp;</div>
+
+      </div>
+
+      <div class="block">
+
+        <h1>
+          News
+        </h1>
+
+        <p>
+          <span class="date">2007.03.10</span>
+          Work has been progressing on the HUD - there are now gauges to show speed and health, ammo count,
+          compass heading etc. This should lead to a simple mission structure, since the game can now
+          show you where you need to go!
+          <a href="images/aircarrierClip" title="short aircarrier video clip">Short video clip showing HUD
+          </a>. Needs <a href="http://www.theora.org/" title="theora.org">Theora codec</a>.
+        </p>
+
+        <p>
+          <span class="date">2007.01.28</span>
+          Explosions! Now there is finally a reason to shoot at stuff :) (see 
+          <a href="images/explosionScreenShot.jpg" title="Explosion screen shot enlarged">new screen shot
+          </a>).
+        </p>
+
+        <p>
+          <span class="date">2007.01.01</span>
+          The planes can now smoke and burst into flames as they are damaged (see 
+          <a href="images/flamesScreenShot.jpg" title="Flames screen shot enlarged">new screen shot
+          </a>). AI is also progressing, it can now predict and avoid collisions with other planes.
+        </p>
+
+        <p>
+          <span class="date">2006.12.25</span>
+          AI is getting better... planes can now (mostly) avoid (the rockiest bits of) mountains. 
+          They can also maintain distance from a target, and shoot at it accounting for it moving at a constant velocity,
+          which makes them quite accurate. Next up: evasion, formation flying, and some higher 
+          level strategy to let them switch between behaviours.
+        </p>
+
+        <p>
+          <span class="date">2006.12.17</span>
+          After a bit of a break from development, I've been cleaning the code up a little. There is now some simple AI steering for the
+          planes, and a framework for adding more behaviour. Also auto-levelling for player controlled planes, and some performance improvements.
+        </p>
+
+        <p>
+          <span class="date">2006.08.27</span>
+          Propeller effect added - see screenshot.
+        </p>
+
+        <p>
+          <span class="date">2006.08.16</span>
+          Two new planes are finished - see screenshots.
+        </p>
+
+        <div class="bottom">&nbsp;</div>
+
+      </div>
+
+    </div>
+
+    <div id="text">
+
+      <h1>
+        Air Carrier
+      </h1>
+      <p>
+        Air Carrier is an aerial combat game, aiming to support single and multiplayer, based around plane to plane dogfighting, and strategic use of airborne carriers. 
+      </p>
+	  <p>
+        Air Carrier is in development, but a playable version will be released as soon as possible. If you have some coding experience and would like to try out the
+        current test level, please refer to the <a href="install.html" title="Install Instructions">installation instructions</a>.
+	  </p>      
+      
+      <p>
+	The project is open source:
+	<br/>
+	Code is available under the GPL licence. 
+	<br/>
+	Models and resources are available under a 
+	<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/uk/">Creative Commons Attribution-NonCommercial-ShareAlike 2.0  License</a>.<!--/Creative Commons License--><!-- <rdf:RDF xmlns="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<Work rdf:about="">
+		<license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/2.0/uk/" />
+		<dc:title>AirCarrier Game Resources</dc:title>
+		<dc:date>2006</dc:date>
+		<dc:description>The meshes, textures, heightfields, levels, and other non-code resources available from the AirCarrier project, at http://aircarrier.dev.java.net/</dc:description>
+		<dc:creator><Agent><dc:title>shingoki</dc:title></Agent></dc:creator>
+		<dc:rights><Agent><dc:title>shingoki</dc:title></Agent></dc:rights>
+		<dc:type rdf:resource="http://purl.org/dc/dcmitype/InteractiveResource" />
+		<dc:source rdf:resource="http://aircarrier.dev.java.net/" />
+	</Work>
+	<License rdf:about="http://creativecommons.org/licenses/by-nc-sa/2.0/uk/"><permits rdf:resource="http://web.resource.org/cc/Reproduction"/><permits rdf:resource="http://web.resource.org/cc/Distribution"/><requires rdf:resource="http://web.resource.org/cc/Notice"/><requires rdf:resource="http://web.resource.org/cc/Attribution"/><prohibits rdf:resource="http://web.resource.org/cc/CommercialUse"/><permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/><requires rdf:resource="http://web.resource.org/cc/ShareAlike"/></License></rdf:RDF> -->
+	<br/>
+
+	<!--Creative Commons License-->
+	<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/uk/">
+	<img alt="Creative Commons License" border="0" src="http://creativecommons.org/images/public/somerights20.png"/></a>
+	
+	
+      </p>
+      <p>
+	The game uses the 3D <a href="http://jmonkeyengine.com/" title="jMonkeyEngine">jMonkeyEngine</a>, and models have been created using <a href="http://blender.org/" title="Blender">Blender</a>.
+      </p>
+
+      <h1>
+        Screenshots
+      </h1>
+      <p>
+      	<a href="images/aircarrierClip" title="short aircarrier video clip">
+        	<img src="images/aircarrierClipSmall.jpg" alt="short aircarrier video clip" class="left"/>
+        </a>
+        A short clip of gameplay - a little badly recorded, and a little slower than realtime due to the recording
+        software, but you can more or less see what is going on :) 
+        You need the <a href="http://www.theora.org/" title="theora.org">Theora codec</a> to play it.
+		<br/>
+      	<a href="images/aircarrierClip" title="short aircarrier video clip">Aircarrier Clip</a>. 
+        Needs <a href="http://www.theora.org/" title="theora.org">Theora codec</a>.
+      </p>
+      <p>
+      	<a href="images/waterBloomShot.jpg" title="Water and bloom screen shot enlarged">
+        	<img src="images/waterBloomShotSmall.jpg" alt="Water and bloom screen shot" class="right"/>
+        </a>
+        New improved water - thanks to MrCoder's fine work in jME :)
+        This also shows the bloom pass, for bright sunlight, tracer rounds and explosions.
+		<br/>
+      	<a href="images/waterBloomShot.jpg" title="Water and bloom screen shot enlarged">
+			Larger Version      	
+        </a>		
+      </p>
+      <p>
+      	<a href="images/explosionScreenShot.jpg" title="Explosion screen shot enlarged">
+        	<img src="images/explosionScreenShotSmall.jpg" alt="Explosion screen shot" class="left"/>
+        </a>
+        Planes now explode when destroyed, scattering bits of charred debris. This shot was taken from an AI vs AI fight.
+		<br/>
+      	<a href="images/explosionScreenShot.jpg" title="Explosion screen shot enlarged">
+			Larger Version      	
+        </a>		
+      </p>
+      <p>
+      	<a href="images/flamesScreenShot.jpg" title="Flames screen shot enlarged">
+        	<img src="images/flamesScreenShotSmall.jpg" alt="Flames screen shot" class="right"/>
+        </a>
+		Three bullpup fighters, with three alarmed but toasty warm pilots. 
+		As planes get damaged, they smoke and then start to flame.
+		<br/>
+      	<a href="images/flamesScreenShot.jpg" title="Flames screen shot enlarged">
+			Larger Version      	
+        </a>		
+      </p>
+	<br/>
+      <p>
+      	<a href="images/planeChaseShot.jpg" title="Plane chase shot enlarged">
+        	<img src="images/planeChaseShotSmall.jpg" alt="Plane chase shot" class="left"/>
+        </a>
+		An early screenshot - the game supports realistic water and lightmapped terrain.
+		<br/>
+      	<a href="images/planeChaseShot.jpg" title="Plane chase shot enlarged">
+			Larger Version      	
+        </a>		
+      </p>
+	<br/>
+      <p>
+      	<a href="images/planeChaseShot2.jpg" title="Plane chase shot 2 enlarged">
+        	<img src="images/planeChaseShot2Small.jpg" alt="Plane chase shot 2" class="right"/>
+        </a>
+		A different terrain and the Hammerhead plane. This is a mid-sized fighter with two missile pods.
+		<br/>
+      	<a href="images/planeChaseShot2.jpg" title="Plane chase shot 2 enlarged">
+			Larger Version      	
+        </a>		
+      </p>
+	<br/>
+      <p>
+      	<a href="images/chimeraScreenShot640.jpg" title="Chimera shot enlarged">
+        	<img src="images/chimeraScreenShot640Small.jpg" alt="Chimera shot thumbnail" class="left"/>
+        </a>
+		The Chimera, this is a heavily armed and armoured, slow moving fighter (Screenshot zoomed to show plane)
+		<br/>
+      	<a href="images/chimeraScreenShot640.jpg" title="Chimera shot enlarged">
+			Larger Version
+        </a>		
+      </p>
+	<br/>
+      <p>
+      	<a href="images/bullpup640.jpg" title="Bullpup shot enlarged">
+        	<img src="images/bullpup640Small.jpg" alt="Bullpup shot thumbnail" class="right"/>
+        </a>
+		The Bullpup, this is a lightly armoured, high-speed fighter (Screenshot zoomed to show plane)
+		<br/>
+      	<a href="images/bullpup640.jpg" title="Bullpup shot enlarged">
+			Larger Version
+        </a>		
+      </p>
+	<br/>
+      <p>
+      	<a href="images/propellerScreenShot.jpg" title="Propeller shot enlarged">
+        	<img src="images/propellerScreenShotSmall.jpg" alt="Propeller shot thumbnail" class="left"/>
+        </a>
+		The new propeller effect (before, the planes were using some kind of alien anti-gravity technology ;) (Screenshot zoomed to show plane)
+		<br/>
+      	<a href="images/propellerScreenShot.jpg" title="Propeller shot enlarged">
+			Larger Version
+        </a>		
+      </p>
+
+
+      <h1>
+        About
+      </h1>
+      <p>
+        The aim for Air Carrier is to produce models and an engine to support different game types based on aerial combat. This will be available for any use, but the initial focus will be on a fast paced, not particularly realistic dogfighting game, supporting deathmatch, team deathmatch, and hopefully other game types like <acronym title="Capture The Flag: A gametype where each team tries to steal the other's flag">CTF</acronym>, etc.
+      </p>
+      <p>
+	Any help is very welcome. If you want to help, then please request an Observer role in the dev.java.net project. You can then use the Air Carrier project forums to ask me about Developer role, etc. Also, please check the #jme channel on freenode IRC if you want to discuss the project.
+      </p>
+
+      <h1>
+      </h1>
+
+      <p>
+	&copy; Shingoki 2006
+	<br/>
+	Template by <a href="http://fullahead.org" title="http://fullahead.org">FullAhead</a> from <a href="http://oswd.org" title="OSWD">OSWD.org</a>, thanks!
+	<br/>
+        Valid <a href="http://validator.w3.org/check?uri=referer" title="validate XHTML">XHTML</a> &amp; <a href="http://jigsaw.w3.org/css-validator" title="validate CSS">CSS</a>
+      </p>
+
+
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+
+</html>

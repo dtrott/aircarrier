@@ -1,0 +1,12 @@
+originX = 6
+originY = 6
+sharpShadowOffsetX = -8
+sharpShadowOffsetY = 8
+aoShadowOffsetX = -5
+aoShadowOffsetY = -6
+cardTitleHeight = 23
+cardBackHeight = 4
+cardStackWidth = 53
+cardStackHeight = 75
+cardWidth = 44
+cardHeight = 64

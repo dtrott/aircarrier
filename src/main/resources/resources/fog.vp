@@ -1,0 +1,59 @@
+!!ARBvp1.0				
+# Setup					
+ATTRIB	vPos	= vertex.position;	
+ATTRIB	vNorm	= vertex.normal;	
+ATTRIB	vCol	= vertex.color;		
+OUTPUT	oPos	= result.position;	
+OUTPUT	oCol	= result.color;		
+OUTPUT  oFog	= result.fogcoord;	
+PARAM	CTM[4]	= { state.matrix.mvp };	
+PARAM	IMV[4]	= { state.matrix.modelview.invtrans };
+PARAM	lVec	= {1,1,1,1};
+PARAM   fogScale= 1;
+PARAM	lHalf	= state.light[0].half;	
+TEMP	vert, eyeNorm, coeff, shade, vFog;
+PARAM	ONE  = { 1, 1, 1, 1 };		
+PARAM	HALF = { 0.5, 0.5, 0.5, 0.5 };	
+PARAM	NEG  = { -1, -1, -1, -1 };	
+## Standard transform			
+DP4  vert.x, CTM[0], vPos;		
+DP4  vert.y, CTM[1], vPos;		
+DP4  vert.z, CTM[2], vPos;		
+DP4  vert.w, CTM[3], vPos;		
+MOV  oPos, vert;			
+## Eye space surface normal		
+DP3  eyeNorm.x, IMV[0], vNorm;		
+DP3  eyeNorm.y, IMV[1], vNorm; 		
+DP3  eyeNorm.z, IMV[2], vNorm;		
+# and normalise				
+DP3  eyeNorm.w, eyeNorm, eyeNorm;	
+RSQ  eyeNorm.w, eyeNorm.w;		
+MUL  eyeNorm, eyeNorm, eyeNorm.w;	
+## Lighting				
+## Ambient: no setup required		
+MUL  shade, state.lightmodel.ambient, vCol;
+## Diffuse: light dot normal		
+DP3  coeff.x, lVec, eyeNorm;		
+## Specular				
+DP3  coeff.y, lHalf, eyeNorm;		
+MOV  coeff.w, state.material.shininess.x;
+# Eval coefficients and sum		
+LIT  coeff, coeff;			
+MAD  shade, coeff.y, vCol, shade;	
+MAD  shade, coeff.z, vCol, shade;	
+MOV  oCol, shade;			
+## Fog: use Y coord			
+MOV  vFog, vert.yyyw;			
+RCP  vFog.w, vFog.w;			
+MUL  vFog, vFog, vFog.w;		
+# Flip so downwards is further away	
+MUL  vFog, vFog, NEG;			
+# Adjust from -1..+1 to 0..1		
+ADD  vFog, vFog, ONE;			
+MUL  vFog, vFog, HALF;			
+# And map to user fog range		
+MUL  vFog, vFog, fogScale;		
+# Use maximum of Y and Z for final fog	
+MAX  vFog.x, vFog.x, vert.z;		
+MOV  oFog, vFog;			
+END

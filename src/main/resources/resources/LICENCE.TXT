@@ -1,0 +1,4 @@
+This licence applies to all game resources in this "resources" directory of this distribution of AirCarrier.
+
+This work is licenced under the Creative Commons Attribution-NonCommercial-ShareAlike 2.0 License. 
+To view a copy of this licence, visit http://creativecommons.org/licenses/by-nc-sa/2.0/uk/ or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.

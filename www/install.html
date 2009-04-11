@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-GB">
+
+<!--
+
+Graphics, text Shingoki. Template as below (thanks!) :
+ ____________________________________________________________
+|                                                            |
+|    DESIGN + Pat Heard { http://fullahead.org }             |
+|      DATE + 2005.08.26                                     |
+| COPYRIGHT + free use if this notice is kept in place       |
+|____________________________________________________________|
+
+-->
+
+<head>
+
+
+  <title>Air Carrier</title>
+
+  <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+  <meta name="author" content="aircarrier.dev.java.net" />
+  <meta name="keywords" content="aircarrier, jmonkeyengine, dogfight, game, java, blender" />
+  <meta name="description" content="The Air Carrier website." />
+  <meta name="robots" content="index, follow" />
+
+  <link rel="stylesheet" type="text/css" href="css/screen.css" media="screen, print" />
+
+</head>
+
+
+<body>
+
+<div id="siteBox">
+
+  <div id="header">
+    <h1 class="actitle">Air Carrier</h1>
+
+    <!-- Opera bug fix -->
+    &nbsp;
+  </div>
+
+  <div id="menu">
+    <a href="main.html" title="Main" class="active">Main</a>
+    <a href="install.html" title="Install" class="active">Install</a>
+  </div>
+
+  <div id="content">
+
+    <div id="news">
+
+      <div class="block">
+
+        <h1>
+          Links
+        </h1>
+        <p>
+          Other projects used by AirCarrier.
+        </p>
+
+        <div class="links">
+          <a href="http://www.jmonkeyengine.com/" title="JMonkeyEngine">jMonkeyEngine</a>
+          <a href="https://jmephysics.dev.java.net/" title="jMEPhysics2">jMEPhysics2</a>
+          <a href="http://www.jmonkeyengine.com/wiki/doku.php?id=the_tutorials" title="jME Tutorials">jME Tutorials</a>
+        </div>
+
+        <div class="bottom">&nbsp;</div>
+
+      </div>
+
+    </div>
+
+    <div id="text">
+
+      <h1>
+        Air Carrier Development
+      </h1>
+      <p>
+        Anyone interested in AirCarrier is encouraged to download 
+        the code to try it out. 
+        <br/>
+        If you like what you see and would 
+        like to contribute then please request an Observer role 
+        from the <a href="https://aircarrier.dev.java.net/" title="Aircarrier Project page">project page</a>.
+        <br/>
+        You can then use the Air Carrier 
+        <a href="https://aircarrier.dev.java.net/servlets/ProjectForumView" title="Forums">project forums</a> 
+        to get in touch :)
+      </p>
+      <h1>
+        Downloading Code
+      </h1>
+      <p>
+			Getting the AirCarrier code from CVS is actually pretty easy, since there is an Eclipse project in the CVS repository. However you first need to get jME and jME Physics 2 CVS versions set up correctly. This shouldn't be too difficult following these instructions:
+			<br/>
+			<br/>
+			The first stage is to set up jME itself in eclipse, for this you can follow the excellent instructions on the jME wiki, please follow from the start, but you don't need to go through "Compiling Into JARs" or any later steps:
+			<br/>		
+			<br/>
+			<a href="http://www.jmonkeyengine.com/wiki/doku.php?id=setting_up_eclipse_to_build_jme" title="jME in Eclipse wiki page">jME in Eclipse wiki page</a>				
+			<br/>
+			<br/>
+			When you have checked that you can run the jME HelloWorld test as described in the wiki, you are ready to install jme-physics as well. There is a wiki entry for this, but for some reason it doesn't quite match up (different project names, etc.). So just go back into the CVS repository view, find the "jmephysics" project under "HEAD" the same way you did for jme itself, right click and "Check out as...". The default settings are fine, to check out as a project in the workspace with name "jmephysics". Click "Finish".
+			<br/>
+			<br/>
+			When the update has finished, go back to the "Java" perspective in Eclipse, and find the jmephysics project. The project should be very nearly set up, since the project settings are in CVS, but you need to make one change. Right click the jmephysics project and select "Properties". Under "Java Compiler", uncheck the "Enable project specific settings" checkbox, click OK, and answer "Yes" if prompted for a rebuild.
+			<br/>
+			<br/>
+			Now you just need to check out aircarrier, this is very similar to checking out jme-physics.
+			<br/>
+			<br/>
+			Go back into the CVS repository view, find the "aircarrier" project under "HEAD" the same way you did for jme itself, right click and "Check out as...". The default settings are fine, to check out as a project in the worksapce with name aircarrier. Click "Finish".
+			<br/>
+			<br/>
+			When the update has finished, go back to the "Java" perspective in Eclipse, and find the aircarrier project. Expand "src", "net.java.dev.aircarrier", then right click the CarrierSimpleLevelManagers.java class, and select "Run as Java Application". You should see the AirCarrier test level. Use the mouse to steer, left and right mouse buttons to fire primary and secondary guns, and "WASD" to brake, boost and roll.
+      </p>
+			
+	  <h1>
+        Common problems
+      </h1>
+      <p>
+			If you have a small number of errors in one or more projects, it may well be that you are not up to date on all projects - to update them, select the project, right click, and select "Team -> Update". This will get any code changes from CVS. If there is still a problem, it is quite likely that aircarrier itself is not up to date with the most recent jme and jmephysics changes - in this case, please give the complete error you get, including line number etc., so that I can make sure aircarrier is updated. This should happen anyway, but I don't always remember to update from jme regularly :)
+			<br/>
+			<br/>
+			It's very easy to get the wrong compiler compliance settings for a project. This is why you need to uncheck the "Enable project specific settings" for the jme-physics project. If you have problems with many errors to do with classes not being generic, etc., you should check that all the projects have project specific settings disabled, and your workspace compiler settings are definitely set to 5.0 or 6.0, as described at the start of the <a href="http://www.jmonkeyengine.com/wiki/doku.php?id=setting_up_eclipse_to_build_jme" title="jME in Eclipse wiki page">jME in Eclipse wiki page</a>
+			<br/>
+			<br/>
+			If applications run, but give an error about unsatisfied libraries, you need to make sure that you have followed the instructions for setting up the jars and native libraries on the <a href="http://www.jmonkeyengine.com/wiki/doku.php?id=setting_up_eclipse_to_build_jme" title="jME in Eclipse wiki page">jME in Eclipse wiki page</a>
+      </p>
+
+
+      <h1>
+      </h1>
+
+      <p>
+	&copy; Shingoki 2006
+	<br/>
+	Template by <a href="http://fullahead.org" title="http://fullahead.org">FullAhead</a> from <a href="http://oswd.org" title="OSWD">OSWD.org</a>, thanks!
+	<br/>
+        Valid <a href="http://validator.w3.org/check?uri=referer" title="validate XHTML">XHTML</a> &amp; <a href="http://jigsaw.w3.org/css-validator" title="validate CSS">CSS</a>
+      </p>
+
+
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+
+</html>
